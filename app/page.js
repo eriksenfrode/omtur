@@ -6,6 +6,7 @@ export default function Home() {
   const [bilde, setBilde] = useState(null)
   const [forhåndsvisning, setForhåndsvisning] = useState(null)
   const [laster, setLaster] = useState(false)
+  const [publiserer, setPubliserer] = useState(false)
   const [resultat, setResultat] = useState(null)
 
   function håndterBilde(e) {
@@ -45,28 +46,49 @@ export default function Home() {
     setResultat(prev => ({ ...prev, [felt]: verdi }))
   }
 
-async function publiserAnnonse() {
-  const { error } = await supabase
-    .from('annonser')
-    .insert({
-      tittel: resultat.tittel,
-      beskrivelse: resultat.beskrivelse,
-      pris: parseInt(resultat.pris),
-      kategori: resultat.kategori,
-      stand: resultat.stand,
-      bilder: [forhåndsvisning],
-      status: 'aktiv'
-    })
+  async function publiserAnnonse() {
+    setPubliserer(true)
 
-  if (error) {
-    alert('Noe gikk galt: ' + error.message)
-  } else {
-    alert('Annonsen er publisert!')
-    setResultat(null)
-    setBilde(null)
-    setForhåndsvisning(null)
+    const filnavn = `${Date.now()}-${bilde.name}`
+    const { error: opplastingsfeil } = await supabase.storage
+      .from('bilder')
+      .upload(filnavn, bilde)
+
+    if (opplastingsfeil) {
+      alert('Kunne ikke laste opp bilde: ' + opplastingsfeil.message)
+      setPubliserer(false)
+      return
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('bilder')
+      .getPublicUrl(filnavn)
+
+    const bildeUrl = urlData.publicUrl
+
+    const { error } = await supabase
+      .from('annonser')
+      .insert({
+        tittel: resultat.tittel,
+        beskrivelse: resultat.beskrivelse,
+        pris: parseInt(resultat.pris),
+        kategori: resultat.kategori,
+        stand: resultat.stand,
+        merke: resultat.merke,
+        bilder: [bildeUrl],
+        status: 'aktiv'
+      })
+
+    if (error) {
+      alert('Noe gikk galt: ' + error.message)
+    } else {
+      alert('Annonsen er publisert!')
+      setResultat(null)
+      setBilde(null)
+      setForhåndsvisning(null)
+    }
+    setPubliserer(false)
   }
-}
 
   return (
     <main className="max-w-xl mx-auto p-6">
@@ -170,12 +192,13 @@ async function publiserAnnonse() {
             />
           </div>
 
-          <button 
-  onClick={publiserAnnonse}
-  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium mt-2"
->
-  Publiser annonse
-</button>
+          <button
+            onClick={publiserAnnonse}
+            disabled={publiserer}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium mt-2 disabled:opacity-50"
+          >
+            {publiserer ? 'Publiserer...' : 'Publiser annonse'}
+          </button>
         </div>
       )}
     </main>
