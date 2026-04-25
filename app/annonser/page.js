@@ -34,7 +34,7 @@ export default function Annonser() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-medium">OmTur</h1>
-          <p className="text-gray-500 text-sm">Brukt friluftsutstyr på Helgeland</p>
+          <p className="text-gray-500 text-sm">Brukt sports- og friluftsutstyr på Helgeland</p>
         </div>
         <a href="/" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
           Selg utstyr
