@@ -9,6 +9,7 @@ export default function Annonse({ params }) {
   const [bud, setBud] = useState([])
   const [navn, setNavn] = useState('')
   const [epost, setEpost] = useState('')
+  const [telefon, setTelefon] = useState('')
   const [budbelop, setBudbelop] = useState('')
   const [sender, setSender] = useState(false)
   const [tidIgjen, setTidIgjen] = useState(null)
@@ -67,8 +68,8 @@ export default function Annonse({ params }) {
   }
 
   async function leggInnBud() {
-    if (!navn || !epost || !budbelop) {
-      alert('Fyll inn navn, e-post og budbelop')
+    if (!navn || !epost || !telefon || !budbelop) {
+      alert('Fyll inn navn, e-post, telefon og budbelop')
       return
     }
     if (parseInt(budbelop) < minBud) {
@@ -99,6 +100,7 @@ export default function Annonse({ params }) {
       budrunde_id: budrunde.id,
       budgiver_navn: navn,
       budgiver_epost: epost,
+      telefon: telefon,
       belop: parseInt(budbelop)
     })
 
@@ -202,6 +204,16 @@ export default function Annonse({ params }) {
                     placeholder="ola@epost.no"
                   />
                 </div>
+                <div className="col-span-2">
+                  <label className="text-xs text-gray-400">Telefon</label>
+                  <input
+                    type="tel"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={telefon}
+                    onChange={e => setTelefon(e.target.value)}
+                    placeholder="987 65 432"
+                  />
+                </div>
               </div>
               <div>
                 <label className="text-xs text-gray-400">
@@ -214,6 +226,9 @@ export default function Annonse({ params }) {
                   onChange={e => setBudbelop(e.target.value)}
                 />
               </div>
+              <p className="text-xs text-gray-400">
+                Navn, e-post og telefon er kun synlig for OmTur og selger etter avsluttet budrunde. Ikke synlig for andre budgivere.
+              </p>
               <button
                 onClick={leggInnBud}
                 disabled={sender}
@@ -230,7 +245,9 @@ export default function Annonse({ params }) {
               {bud.map((b, i) => (
                 <div key={b.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
                   <div>
-                    <p className="text-sm font-medium">{b.budgiver_navn}</p>
+                    <p className="text-sm font-medium text-gray-500">
+                      {i === 0 ? 'Høyeste bud' : 'Bud ' + (bud.length - i)}
+                    </p>
                     <p className="text-xs text-gray-400">{new Date(b.opprettet).toLocaleString('no-NO')}</p>
                   </div>
                   <span className={'font-medium ' + (i === 0 ? 'text-emerald-600' : 'text-gray-400')}>
@@ -242,6 +259,10 @@ export default function Annonse({ params }) {
           )}
         </div>
       )}
+
+      <div className="text-center mt-4">
+        <a href="/vilkar" className="text-xs text-gray-400 hover:text-gray-600">Vilkår og personvern</a>
+      </div>
     </main>
   )
 }
