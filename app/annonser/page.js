@@ -46,11 +46,7 @@ export default function Annonser() {
           <button
             key={k}
             onClick={() => setFilter(k)}
-            className={`px-3 py-1 rounded-full text-sm border ${
-              filter === k
-                ? 'bg-emerald-600 text-white border-emerald-600'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400'
-            }`}
+            className={'px-3 py-1 rounded-full text-sm border ' + (filter === k ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
           >
             {k}
           </button>
@@ -64,18 +60,18 @@ export default function Annonser() {
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {filtrerte.map(annonse => (
-            <div key={annonse.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:border-emerald-200 transition-colors">
+            <a key={annonse.id} href={'/annonser/' + annonse.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:border-emerald-200 transition-colors block">
               <div className="bg-gray-50 h-40 overflow-hidden">
-  {annonse.bilder && annonse.bilder[0] ? (
-    <img
-      src={annonse.bilder[0]}
-      className="w-full h-full object-cover"
-      alt={annonse.tittel}
-    />
-  ) : (
-    <div className="w-full h-full flex items-center justify-center text-4xl">🏕️</div>
-  )}
-</div>
+                {annonse.bilder && annonse.bilder[0] ? (
+                  <img
+                    src={annonse.bilder[0]}
+                    className="w-full h-full object-cover"
+                    alt={annonse.tittel}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-4xl">🏕️</div>
+                )}
+              </div>
               <div className="p-3">
                 <p className="font-medium text-sm mb-1 line-clamp-1">{annonse.tittel}</p>
                 <p className="text-xs text-gray-400 mb-2">{annonse.merke} · {annonse.stand}</p>
@@ -84,7 +80,7 @@ export default function Annonser() {
                   <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-500">{annonse.kategori}</span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       )}

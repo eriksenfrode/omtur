@@ -20,17 +20,14 @@ export default function Home() {
     if (!bilde) return
     setLaster(true)
     setResultat(null)
-
     const base64 = await tilBase64(bilde)
-
     const svar = await fetch('/api/analyser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bilde: base64, type: bilde.type })
     })
-
     const data = await svar.json()
-    setResultat(data)
+    setResultat({ ...data, minimumshopp: 50 })
     setLaster(false)
   }
 
@@ -49,7 +46,7 @@ export default function Home() {
   async function publiserAnnonse() {
     setPubliserer(true)
 
-    const filnavn = `${Date.now()}-${bilde.name}`
+    const filnavn = Date.now() + '-' + bilde.name
     const { error: opplastingsfeil } = await supabase.storage
       .from('bilder')
       .upload(filnavn, bilde)
@@ -60,13 +57,10 @@ export default function Home() {
       return
     }
 
-    const { data: urlData } = supabase.storage
-      .from('bilder')
-      .getPublicUrl(filnavn)
-
+    const { data: urlData } = supabase.storage.from('bilder').getPublicUrl(filnavn)
     const bildeUrl = urlData.publicUrl
 
-    const { error } = await supabase
+    const { data: annonse, error: annonseError } = await supabase
       .from('annonser')
       .insert({
         tittel: resultat.tittel,
@@ -76,17 +70,41 @@ export default function Home() {
         stand: resultat.stand,
         merke: resultat.merke,
         bilder: [bildeUrl],
-        status: 'aktiv'
+        status: 'aktiv',
+        salgstype: 'budrunde'
+      })
+      .select()
+      .single()
+
+    if (annonseError) {
+      alert('Annonse feil: ' + annonseError.message)
+      setPubliserer(false)
+      return
+    }
+
+    console.log('Annonse opprettet med id:', annonse.id)
+
+    const { error: budrundeError } = await supabase
+      .from('budrunder')
+      .insert({
+        annonse_id: annonse.id,
+        startpris: parseInt(resultat.pris),
+        minimumshopp: parseInt(resultat.minimumshopp) || 50,
+        navarende_bud: parseInt(resultat.pris),
+        status: 'venter'
       })
 
-    if (error) {
-      alert('Noe gikk galt: ' + error.message)
-    } else {
-      alert('Annonsen er publisert!')
-      setResultat(null)
-      setBilde(null)
-      setForhåndsvisning(null)
+    if (budrundeError) {
+      alert('Budrunde feil: ' + budrundeError.message)
+      setPubliserer(false)
+      return
     }
+
+    console.log('Budrunde opprettet!')
+    alert('Annonsen er publisert!')
+    setResultat(null)
+    setBilde(null)
+    setForhåndsvisning(null)
     setPubliserer(false)
   }
 
@@ -152,7 +170,7 @@ export default function Home() {
                 <option>Slitt</option>
               </select>
             </div>
-            <div>
+            <div className="col-span-2">
               <label className="text-xs text-gray-400">Kategori</label>
               <select
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
@@ -172,13 +190,25 @@ export default function Home() {
               </select>
             </div>
             <div>
-              <label className="text-xs text-gray-400">Pris (kr)</label>
+              <label className="text-xs text-gray-400">Startpris (kr)</label>
               <input
                 type="number"
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
                 value={resultat.pris}
                 onChange={e => oppdater('pris', e.target.value)}
               />
+            </div>
+            <div>
+              <label className="text-xs text-gray-400">Minimumshopp (kr)</label>
+              <input
+                type="number"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                value={resultat.minimumshopp}
+                onChange={e => oppdater('minimumshopp', e.target.value)}
+              />
+            </div>
+            <div className="col-span-2 bg-emerald-50 rounded-lg p-3">
+              <p className="text-xs text-emerald-700">Budrunden starter ved første bud og avsluttes etter 24 timer. Bud de siste 15 minuttene forlenger fristen automatisk med 15 minutter.</p>
             </div>
           </div>
 

@@ -1,0 +1,247 @@
+'use client'
+import { useState, useEffect, use } from 'react'
+import { supabase } from '../../../lib/supabase'
+
+export default function Annonse({ params }) {
+  const { id } = use(params)
+  const [annonse, setAnnonse] = useState(null)
+  const [budrunde, setBudrunde] = useState(null)
+  const [bud, setBud] = useState([])
+  const [navn, setNavn] = useState('')
+  const [epost, setEpost] = useState('')
+  const [budbelop, setBudbelop] = useState('')
+  const [sender, setSender] = useState(false)
+  const [tidIgjen, setTidIgjen] = useState(null)
+
+  useEffect(() => {
+    hentAnnonse()
+  }, [])
+
+  useEffect(() => {
+    if (!budrunde || budrunde.status === 'venter') return
+    const intervall = setInterval(() => {
+      const na = new Date()
+      const slutt = new Date(budrunde.sluttid)
+      const diff = slutt - na
+      if (diff <= 0) {
+        setTidIgjen('Budrunden er avsluttet')
+        clearInterval(intervall)
+      } else {
+        const timer = Math.floor(diff / 1000 / 60 / 60)
+        const min = Math.floor((diff / 1000 / 60) % 60)
+        const sek = Math.floor((diff / 1000) % 60)
+        setTidIgjen(timer + 't ' + min + 'm ' + sek + 's igjen')
+      }
+    }, 1000)
+    return () => clearInterval(intervall)
+  }, [budrunde])
+
+  async function hentAnnonse() {
+    const { data: a } = await supabase
+      .from('annonser')
+      .select('*')
+      .eq('id', id)
+      .single()
+    setAnnonse(a)
+
+    const { data: b } = await supabase
+      .from('budrunder')
+      .select('*')
+      .eq('annonse_id', id)
+      .single()
+    setBudrunde(b)
+
+    if (b) {
+      const { data: budliste } = await supabase
+        .from('bud')
+        .select('*')
+        .eq('budrunde_id', b.id)
+        .order('opprettet', { ascending: false })
+      setBud(budliste || [])
+      if (budliste && budliste.length > 0) {
+        setBudbelop(b.navarende_bud + (b.minimumshopp || 50))
+      } else {
+        setBudbelop(b.startpris)
+      }
+    }
+  }
+
+  async function leggInnBud() {
+    if (!navn || !epost || !budbelop) {
+      alert('Fyll inn navn, e-post og budbelop')
+      return
+    }
+    if (parseInt(budbelop) < minBud) {
+      alert('Budet er for lavt. Minimum er ' + minBud + ' kr')
+      return
+    }
+    setSender(true)
+
+    const na = new Date()
+    let nySluttid = budrunde.sluttid
+
+    if (budrunde.status === 'venter') {
+      nySluttid = new Date(na.getTime() + 24 * 60 * 60 * 1000).toISOString()
+    } else {
+      const slutt = new Date(budrunde.sluttid)
+      const diffMin = (slutt - na) / 1000 / 60
+      if (diffMin < 15) {
+        nySluttid = new Date(slutt.getTime() + 15 * 60 * 1000).toISOString()
+      }
+    }
+
+    const tidligereBudgivere = bud.map(b => ({
+      epost: b.budgiver_epost,
+      belop: b.belop
+    }))
+
+    await supabase.from('bud').insert({
+      budrunde_id: budrunde.id,
+      budgiver_navn: navn,
+      budgiver_epost: epost,
+      belop: parseInt(budbelop)
+    })
+
+    await supabase
+      .from('budrunder')
+      .update({
+        navarende_bud: parseInt(budbelop),
+        sluttid: nySluttid,
+        status: 'aktiv'
+      })
+      .eq('id', budrunde.id)
+
+    await fetch('/api/varsle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'bud_bekreftet',
+        annonse: annonse,
+        bud: { budgiver_epost: epost, belop: parseInt(budbelop) }
+      })
+    })
+
+    if (tidligereBudgivere.length > 0) {
+      await fetch('/api/varsle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'overbydd',
+          annonse: annonse,
+          bud: { belop: parseInt(budbelop) },
+          tidligereBudgivere: tidligereBudgivere
+        })
+      })
+    }
+
+    await hentAnnonse()
+    setSender(false)
+    alert('Budet er registrert! Du vil få bekreftelse på e-post.')
+  }
+
+  if (!annonse) return <main className="max-w-xl mx-auto p-6"><p className="text-gray-400">Laster...</p></main>
+
+  const minBud = !budrunde ? annonse.pris : (bud.length > 0
+    ? budrunde.navarende_bud + budrunde.minimumshopp
+    : budrunde.startpris)
+
+  return (
+    <main className="max-w-xl mx-auto p-6">
+      <a href="/annonser" className="text-sm text-gray-400 hover:text-gray-600 mb-4 block">
+        Tilbake til annonser
+      </a>
+
+      {annonse.bilder && annonse.bilder[0] && (
+        <img src={annonse.bilder[0]} className="w-full max-h-80 object-cover rounded-xl mb-4" />
+      )}
+
+      <h1 className="text-2xl font-medium mb-1">{annonse.tittel}</h1>
+      <p className="text-gray-400 text-sm mb-4">{annonse.merke} · {annonse.stand} · {annonse.kategori}</p>
+      <p className="text-gray-600 mb-6">{annonse.beskrivelse}</p>
+
+      {budrunde && (
+        <div className="bg-gray-50 rounded-xl p-5 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <p className="text-xs text-gray-400">
+                {budrunde.status === 'venter' ? 'Startpris' : 'Høyeste bud'}
+              </p>
+              <p className="text-3xl font-medium text-emerald-600">
+                {budrunde.navarende_bud} kr
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-gray-400">Status</p>
+              {budrunde.status === 'venter' ? (
+                <span className="text-sm bg-gray-200 text-gray-600 px-3 py-1 rounded-full">Ingen bud ennå</span>
+              ) : (
+                <span className="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">{tidIgjen}</span>
+              )}
+            </div>
+          </div>
+
+          {budrunde.status !== 'avsluttet' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-gray-400">Ditt navn</label>
+                  <input
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={navn}
+                    onChange={e => setNavn(e.target.value)}
+                    placeholder="Ola Nordmann"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-400">E-post</label>
+                  <input
+                    type="email"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={epost}
+                    onChange={e => setEpost(e.target.value)}
+                    placeholder="ola@epost.no"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-gray-400">
+                  Ditt bud (minimum {minBud} kr)
+                </label>
+                <input
+                  type="number"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                  value={budbelop}
+                  onChange={e => setBudbelop(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={leggInnBud}
+                disabled={sender}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium disabled:opacity-50"
+              >
+                {sender ? 'Registrerer bud...' : 'Legg inn bud'}
+              </button>
+            </div>
+          )}
+
+          {bud.length > 0 && (
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              <p className="text-xs text-gray-400 mb-3">Budhistorikk</p>
+              {bud.map((b, i) => (
+                <div key={b.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                  <div>
+                    <p className="text-sm font-medium">{b.budgiver_navn}</p>
+                    <p className="text-xs text-gray-400">{new Date(b.opprettet).toLocaleString('no-NO')}</p>
+                  </div>
+                  <span className={'font-medium ' + (i === 0 ? 'text-emerald-600' : 'text-gray-400')}>
+                    {b.belop} kr
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </main>
+  )
+}
