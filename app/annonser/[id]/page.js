@@ -278,6 +278,14 @@ export default function Annonse() {
               >
                 {sender ? 'Registrerer bud...' : 'Legg inn bud'}
               </button>
+              <a
+                href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/annonser/' + id) + '&quote=' + encodeURIComponent('Sjekk ut denne annonsen på OmTur — markedsplassen for brukt sports- og fritidsutstyr på Helgeland! omtur.no')}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', backgroundColor: '#1877F2', color: 'white', padding: '12px', borderRadius: '10px', fontWeight: '500', fontSize: '15px', textDecoration: 'none', marginTop: '12px'}}
+              >
+                <span style={{fontWeight: 'bold', fontSize: '18px'}}>f</span> Del på Facebook
+              </a>
             </div>
           )}
 
