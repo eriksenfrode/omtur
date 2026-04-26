@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase'
 export default function Home() {
   const [bilder, setBilder] = useState([])
   const [forhåndsvisninger, setForhåndsvisninger] = useState([])
+  const [forsideBildeIndex, setForsideBildeIndex] = useState(0)
   const [laster, setLaster] = useState(false)
   const [publiserer, setPubliserer] = useState(false)
   const [resultat, setResultat] = useState(null)
@@ -19,6 +20,7 @@ export default function Home() {
   function fjernBilde(index) {
     setBilder(prev => prev.filter((_, i) => i !== index))
     setForhåndsvisninger(prev => prev.filter((_, i) => i !== index))
+    setForsideBildeIndex(prev => (index === prev ? 0 : index < prev ? prev - 1 : prev))
   }
 
   async function analyserBilder() {
@@ -58,8 +60,13 @@ export default function Home() {
   async function publiserAnnonse() {
     setPubliserer(true)
 
+    const sorterteBilder = [
+      bilder[forsideBildeIndex],
+      ...bilder.filter((_, i) => i !== forsideBildeIndex)
+    ]
+
     const bildeUrler = []
-    for (const bilde of bilder) {
+    for (const bilde of sorterteBilder) {
       const filnavn = Date.now() + '-' + Math.random().toString(36).slice(2) + '-' + bilde.name
       const { error: opplastingsfeil } = await supabase.storage
         .from('bilder')
@@ -117,6 +124,7 @@ export default function Home() {
     setResultat(null)
     setBilder([])
     setForhåndsvisninger([])
+    setForsideBildeIndex(0)
     setPubliserer(false)
   }
 
@@ -127,19 +135,44 @@ export default function Home() {
 
       <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center mb-2">
         {forhåndsvisninger.length > 0 ? (
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            {forhåndsvisninger.map((src, i) => (
-              <div key={i} className="relative">
-                <img src={src} className="w-full h-24 object-cover rounded-lg" />
-                <button
-                  onClick={() => fjernBilde(i)}
-                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-5 h-5 text-xs leading-none flex items-center justify-center"
+          <>
+            <div className="flex flex-wrap gap-2 mb-2 justify-center">
+              {forhåndsvisninger.map((src, i) => (
+                <div
+                  key={i}
+                  className="relative cursor-pointer flex-shrink-0 rounded-lg"
+                  style={{
+                    width: 120,
+                    height: 120,
+                    border: i === forsideBildeIndex ? '3px solid #059669' : '3px solid transparent'
+                  }}
+                  onClick={() => setForsideBildeIndex(i)}
+                  title="Klikk for å velge som forsidebilde"
                 >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
+                  <img
+                    src={src}
+                    className={`w-full h-full object-cover rounded-lg transition-all ${
+                      i === forsideBildeIndex ? '' : 'opacity-80 hover:opacity-100'
+                    }`}
+                  />
+                  {i === forsideBildeIndex && (
+                    <span className="absolute bottom-1 left-1 bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">
+                      Forsidebilde
+                    </span>
+                  )}
+                  <button
+                    onClick={e => { e.stopPropagation(); fjernBilde(i) }}
+                    className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-5 h-5 text-xs leading-none flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+            {resultat && (
+              <p className="text-xs text-gray-400 mb-2">Klikk på et bilde for å velge forsidebilde</p>
+            )}
+          </>
         ) : (
           <p className="text-gray-400 mb-4">Ingen bilder valgt</p>
         )}

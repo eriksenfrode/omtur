@@ -1,9 +1,10 @@
 'use client'
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
 
-export default function Annonse({ params }) {
-  const { id } = use(params)
+export default function Annonse() {
+  const { id } = useParams()
   const [annonse, setAnnonse] = useState(null)
   const [budrunde, setBudrunde] = useState(null)
   const [bud, setBud] = useState([])
@@ -13,6 +14,7 @@ export default function Annonse({ params }) {
   const [budbelop, setBudbelop] = useState('')
   const [sender, setSender] = useState(false)
   const [tidIgjen, setTidIgjen] = useState(null)
+  const [aktivtBilde, setAktivtBilde] = useState(0)
 
   useEffect(() => {
     hentAnnonse()
@@ -153,8 +155,48 @@ export default function Annonse({ params }) {
         Tilbake til annonser
       </a>
 
-      {annonse.bilder && annonse.bilder[0] && (
-        <img src={annonse.bilder[0]} className="w-full max-h-80 object-cover rounded-xl mb-4" />
+      {annonse.bilder && annonse.bilder.length > 0 && (
+        <div className="mb-3">
+          <div className="relative">
+            <img
+              src={annonse.bilder[aktivtBilde]}
+              className="w-full object-cover rounded-xl"
+              style={{ maxHeight: '260px' }}
+            />
+            {annonse.bilder.length > 1 && (
+              <>
+                <button
+                  onClick={() => setAktivtBilde(i => (i - 1 + annonse.bilder.length) % annonse.bilder.length)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={() => setAktivtBilde(i => (i + 1) % annonse.bilder.length)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg"
+                >
+                  ›
+                </button>
+              </>
+            )}
+          </div>
+          {annonse.bilder.length > 1 && (
+            <div className="flex gap-2 mt-2 overflow-x-auto">
+              {annonse.bilder.map((src, i) => (
+                <button key={i} onClick={() => setAktivtBilde(i)} className="flex-shrink-0">
+                  <img
+                    src={src}
+                    className={`h-[64px] w-[64px] object-cover rounded-lg transition-all ${
+                      i === aktivtBilde
+                        ? 'ring-2 ring-emerald-500 ring-offset-1'
+                        : 'opacity-60 hover:opacity-100'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       <h1 className="text-2xl font-medium mb-1">{annonse.tittel}</h1>
