@@ -1,30 +1,42 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../../lib/supabase'
 
 export default function Home() {
-  const [bilde, setBilde] = useState(null)
-  const [forhåndsvisning, setForhåndsvisning] = useState(null)
+  const [bilder, setBilder] = useState([])
+  const [forhåndsvisninger, setForhåndsvisninger] = useState([])
   const [laster, setLaster] = useState(false)
   const [publiserer, setPubliserer] = useState(false)
   const [resultat, setResultat] = useState(null)
 
-  function håndterBilde(e) {
-    const fil = e.target.files[0]
-    if (!fil) return
-    setBilde(fil)
-    setForhåndsvisning(URL.createObjectURL(fil))
+  function håndterBilder(e) {
+    const filer = Array.from(e.target.files)
+    const nyeFiler = filer.slice(0, 5 - bilder.length)
+    setBilder(prev => [...prev, ...nyeFiler])
+    setForhåndsvisninger(prev => [...prev, ...nyeFiler.map(f => URL.createObjectURL(f))])
   }
 
-  async function analyserBilde() {
-    if (!bilde) return
+  function fjernBilde(index) {
+    setBilder(prev => prev.filter((_, i) => i !== index))
+    setForhåndsvisninger(prev => prev.filter((_, i) => i !== index))
+  }
+
+  async function analyserBilder() {
+    if (bilder.length === 0) return
     setLaster(true)
     setResultat(null)
-    const base64 = await tilBase64(bilde)
+
+    const base64Bilder = await Promise.all(
+      bilder.map(async bilde => ({
+        data: await tilBase64(bilde),
+        type: bilde.type
+      }))
+    )
+
     const svar = await fetch('/api/analyser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bilde: base64, type: bilde.type })
+      body: JSON.stringify({ bilder: base64Bilder })
     })
     const data = await svar.json()
     setResultat({ ...data, minimumshopp: 50 })
@@ -46,19 +58,22 @@ export default function Home() {
   async function publiserAnnonse() {
     setPubliserer(true)
 
-    const filnavn = Date.now() + '-' + bilde.name
-    const { error: opplastingsfeil } = await supabase.storage
-      .from('bilder')
-      .upload(filnavn, bilde)
+    const bildeUrler = []
+    for (const bilde of bilder) {
+      const filnavn = Date.now() + '-' + Math.random().toString(36).slice(2) + '-' + bilde.name
+      const { error: opplastingsfeil } = await supabase.storage
+        .from('bilder')
+        .upload(filnavn, bilde)
 
-    if (opplastingsfeil) {
-      alert('Kunne ikke laste opp bilde: ' + opplastingsfeil.message)
-      setPubliserer(false)
-      return
+      if (opplastingsfeil) {
+        alert('Kunne ikke laste opp bilde: ' + opplastingsfeil.message)
+        setPubliserer(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage.from('bilder').getPublicUrl(filnavn)
+      bildeUrler.push(urlData.publicUrl)
     }
-
-    const { data: urlData } = supabase.storage.from('bilder').getPublicUrl(filnavn)
-    const bildeUrl = urlData.publicUrl
 
     const { data: annonse, error: annonseError } = await supabase
       .from('annonser')
@@ -69,7 +84,7 @@ export default function Home() {
         kategori: resultat.kategori,
         stand: resultat.stand,
         merke: resultat.merke,
-        bilder: [bildeUrl],
+        bilder: bildeUrler,
         status: 'aktiv',
         salgstype: 'budrunde'
       })
@@ -81,8 +96,6 @@ export default function Home() {
       setPubliserer(false)
       return
     }
-
-    console.log('Annonse opprettet med id:', annonse.id)
 
     const { error: budrundeError } = await supabase
       .from('budrunder')
@@ -100,34 +113,63 @@ export default function Home() {
       return
     }
 
-    console.log('Budrunde opprettet!')
     alert('Annonsen er publisert!')
     setResultat(null)
-    setBilde(null)
-    setForhåndsvisning(null)
+    setBilder([])
+    setForhåndsvisninger([])
     setPubliserer(false)
   }
 
   return (
     <main className="max-w-xl mx-auto p-6">
       <h1 className="text-2xl font-medium mb-2">OmTur</h1>
-      <p className="text-gray-500 mb-8">Last opp bilde av utstyret — KI gjør resten</p>
+      <p className="text-gray-500 mb-8">Last opp bilder av utstyret — KI gjør resten</p>
 
-      <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center mb-4">
-        {forhåndsvisning ? (
-          <img src={forhåndsvisning} className="max-h-64 mx-auto rounded-lg mb-4" />
+      <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center mb-2">
+        {forhåndsvisninger.length > 0 ? (
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            {forhåndsvisninger.map((src, i) => (
+              <div key={i} className="relative">
+                <img src={src} className="w-full h-24 object-cover rounded-lg" />
+                <button
+                  onClick={() => fjernBilde(i)}
+                  className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-5 h-5 text-xs leading-none flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
         ) : (
-          <p className="text-gray-400 mb-4">Ingen bilde valgt</p>
+          <p className="text-gray-400 mb-4">Ingen bilder valgt</p>
         )}
-        <input type="file" accept="image/*" onChange={håndterBilde} className="hidden" id="bildevalg" />
-        <label htmlFor="bildevalg" className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm">
-          Velg bilde
-        </label>
+        {bilder.length < 5 && (
+          <>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={håndterBilder}
+              className="hidden"
+              id="bildevalg"
+            />
+            <label
+              htmlFor="bildevalg"
+              className="cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm"
+            >
+              {bilder.length === 0 ? 'Velg bilder' : `Legg til flere (${bilder.length}/5)`}
+            </label>
+          </>
+        )}
       </div>
 
-      {bilde && (
+      <p className="text-xs text-gray-400 text-center mb-4">
+        Last opp 3–5 bilder for best mulig prisestimat
+      </p>
+
+      {bilder.length > 0 && (
         <button
-          onClick={analyserBilde}
+          onClick={analyserBilder}
           disabled={laster}
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium mb-6 disabled:opacity-50"
         >
