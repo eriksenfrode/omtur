@@ -18,7 +18,7 @@ export default function Vilkar() {
 
         <h3 className="font-medium mb-2">Selgers ansvar</h3>
         <p className="text-gray-600 mb-4 leading-relaxed">
-          Selger er ansvarlig for at informasjonen i annonsen er korrekt, inkludert beskrivelse av stand og eventuelle feil eller mangler ved utstyret. Produktbeskrivelsen genereres med kunstig intelligens og må godkjennes av selger før publisering. OmTur er ikke ansvarlig for feil i KI-generert innhold som selger har godkjent.
+          Selger er ansvarlig for at informasjonen i annonsen er korrekt, inkludert beskrivelse av stand og eventuelle feil eller mangler ved utstyret. Produktbeskrivelsen genereres med kunstig intelligens og må godkjennes av selger før publisering. OmTur er ikke ansvarlig for feil i KI-generert innhold som selger har godkjent. Prisforslaget genereres av KI basert på analyse av lignende utstyr fra nettbutikker og bruktmarkeder. Dette er et estimat — selger godkjenner alltid prisen før publisering.
         </p>
 
         <h3 className="font-medium mb-2">Budrunder</h3>
