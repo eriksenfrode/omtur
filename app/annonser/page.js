@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '../../lib/supabase'
 
 export default function Annonser() {
   const [annonser, setAnnonser] = useState([])
@@ -10,20 +9,20 @@ export default function Annonser() {
   const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Jakker og vinterklær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
 
   useEffect(() => {
+    async function hentAnnonser() {
+      setLaster(true)
+      const { supabase } = await import('../../lib/supabase')
+      const { data, error } = await supabase
+        .from('annonser')
+        .select('*')
+        .eq('status', 'aktiv')
+        .order('opprettet', { ascending: false })
+
+      if (!error) setAnnonser(data)
+      setLaster(false)
+    }
     hentAnnonser()
   }, [])
-
-  async function hentAnnonser() {
-    setLaster(true)
-    const { data, error } = await supabase
-      .from('annonser')
-      .select('*')
-      .eq('status', 'aktiv')
-      .order('opprettet', { ascending: false })
-
-    if (!error) setAnnonser(data)
-    setLaster(false)
-  }
 
   const filtrerte = filter === 'Alle'
     ? annonser
