@@ -13,7 +13,7 @@ export default function Vilkar() {
 
         <h3 className="font-medium mb-2">Om OmTur</h3>
         <p className="text-gray-600 mb-4 leading-relaxed">
-          OmTur er en markedsplass for kjøp og salg av brukt friluftsutstyr. Tjenesten er drevet av en privatperson og er for tiden i en testfase rettet mot brukere på Helgeland.
+          OmTur er en markedsplass for kjøp og salg av brukt klær og utstyr til sport, fritid og friluftsliv. Tjenesten er drevet av en privatperson og er for tiden i en testfase rettet mot brukere på Helgeland.
         </p>
 
         <h3 className="font-medium mb-2">Selgers ansvar</h3>

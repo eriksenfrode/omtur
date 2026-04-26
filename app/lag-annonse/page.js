@@ -219,16 +219,17 @@ export default function Home() {
                 value={resultat.kategori}
                 onChange={e => oppdater('kategori', e.target.value)}
               >
-                <option>Telt</option>
-                <option>Sovepose</option>
-                <option>Sekk</option>
-                <option>Jakke</option>
-                <option>Bukse</option>
-                <option>Sko</option>
-                <option>Ski</option>
+                <option>Telt og sov</option>
+                <option>Sekker og pakking</option>
+                <option>Jakker og vinterklær</option>
+                <option>Bukser og shorts</option>
+                <option>Sko og støvler</option>
+                <option>Ski og vinter</option>
                 <option>Sykkel</option>
                 <option>Klatring</option>
-                <option>Annet</option>
+                <option>Vannaktiviteter</option>
+                <option>Annet utstyr</option>
+                <option>Annet klær</option>
               </select>
             </div>
             <div>

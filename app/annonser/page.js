@@ -7,7 +7,7 @@ export default function Annonser() {
   const [laster, setLaster] = useState(true)
   const [filter, setFilter] = useState('Alle')
 
-  const kategorier = ['Alle', 'Telt', 'Sovepose', 'Sekk', 'Jakke', 'Bukse', 'Sko', 'Ski', 'Sykkel', 'Klatring', 'Annet']
+  const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Jakker og vinterklær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
 
   useEffect(() => {
     hentAnnonser()
@@ -34,7 +34,7 @@ export default function Annonser() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-medium">OmTur</h1>
-          <p className="text-gray-500 text-sm">Brukt sports- og friluftsutstyr på Helgeland</p>
+          <p className="text-gray-500 text-sm">Klær og utstyr til sport, fritid og friluftsliv på Helgeland</p>
         </div>
         <a href="/" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
           Selg utstyr

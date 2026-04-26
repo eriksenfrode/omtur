@@ -35,7 +35,7 @@ export default function Forside() {
           Helgeland sin egen markedsplass for brukt utstyr
         </div>
         <h1 style={{fontSize: '38px', fontWeight: '500', marginBottom: '20px', lineHeight: '1.3'}}>
-          Selg brukt sports- og friluftsutstyr.<br />
+          Selg brukt klær og utstyr til sport, fritid og friluftsliv.<br />
           <span style={{color: '#059669'}}>KI gjør jobben for deg.</span>
         </h1>
         <p style={{color: '#6b7280', fontSize: '18px', marginBottom: '40px', maxWidth: '560px', margin: '0 auto 40px', lineHeight: '1.7'}}>
