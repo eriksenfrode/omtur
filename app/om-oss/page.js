@@ -32,13 +32,13 @@ export default function OmOss() {
         <div style={{maxWidth: '640px', margin: '0 auto', padding: '0 24px'}}>
           <h2 style={{fontSize: '20px', fontWeight: '500', marginBottom: '24px'}}>Historien</h2>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px'}}>
-            OmTur ble startet av Frode Eriksen i Mo i Rana i 2026. Ideen kom fra en frustrasjon mange kjenner seg igjen i: det er for tungvint å selge brukt sports- og fritidsutstyr.
+            OmTur ble startet av Frode Eriksen i Mo i Rana i 2026. Ideen kom fra observasjonen av at kjøp og salg i Facebook-grupper er tungvint — man må skrive annonsen selv, håndtere spørsmål, forhandle om pris og avtale møtetider. OmTur forenkler hele denne prosessen ved hjelp av kunstig intelligens.
           </p>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px'}}>
-            Det skal ikke ta en halvtime å skrive en annonse, finne riktig pris og legge ut bilder — det er grunnen til at mye godt utstyr samler støv i boden i stedet for å komme til nytte hos noen andre.
+            I tillegg handler OmTur om noe større: ved å gjøre det enkelt å selge brukt utstyr, bidrar vi til at færre ting kastes og mer utstyr får et nytt liv. Det er bra for lommeboka og bra for miljøet.
           </p>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8'}}>
-            Med hjelp av kunstig intelligens gjør OmTur det mulig å legge ut en annonse på <strong style={{color: '#059669'}}>3 minutter</strong>. Last opp et bilde — KI analyserer utstyret, skriver annonsen og foreslår en rettferdig pris automatisk.
+            OmTur er startet på Helgeland og fokuserer på lokale kjøpere og selgere i første omgang.
           </p>
         </div>
       </section>
