@@ -35,6 +35,7 @@ export default function Forside() {
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
           <a href="/annonser" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Se annonser</a>
+          <a href="/om-oss" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Om oss</a>
           <a href="/logginn" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Logg inn</a>
         </div>
       </nav>

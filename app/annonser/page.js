@@ -54,6 +54,9 @@ export default function Annonser() {
           <p className="text-gray-500 text-sm">Klær og utstyr til sport, fritid og friluftsliv på Helgeland</p>
         </div>
         <div className="flex items-center gap-2">
+          <a href="/om-oss" className="text-sm text-gray-500 hover:text-gray-700">
+            Om oss
+          </a>
           {session ? (
             <a href="/min-side" className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:border-gray-300">
               Min side
