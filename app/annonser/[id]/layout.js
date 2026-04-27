@@ -10,25 +10,23 @@ export async function generateMetadata({ params }) {
 
   const { data: annonse } = await supabase
     .from('annonser')
-    .select('tittel, beskrivelse, bilder')
+    .select('tittel, beskrivelse, bilder, merke, pris')
     .eq('id', id)
     .single()
 
-  if (!annonse) {
-    return { title: 'Annonse — OmTur' }
-  }
+  const bilde = annonse?.bilder?.[0] ?? null
 
   return {
-    title: `${annonse.tittel} — OmTur`,
-    description: annonse.beskrivelse,
+    title: (annonse?.tittel ?? 'Annonse') + ' — OmTur',
+    description: annonse?.beskrivelse ?? 'Brukt sports- og fritidsutstyr på Helgeland',
     openGraph: {
-      title: annonse.tittel,
-      description: annonse.beskrivelse,
-      images: annonse.bilder?.[0] ? [{ url: annonse.bilder[0] }] : [],
-      url: `https://omtur.no/annonser/${id}`,
+      title: (annonse?.tittel ?? 'Annonse') + ' — OmTur',
+      description: annonse?.beskrivelse ?? 'Brukt sports- og fritidsutstyr på Helgeland',
+      url: 'https://omtur.no/annonser/' + id,
       siteName: 'OmTur',
+      images: bilde ? [{ url: bilde, width: 1200, height: 630 }] : [],
       type: 'website',
-    },
+    }
   }
 }
 
