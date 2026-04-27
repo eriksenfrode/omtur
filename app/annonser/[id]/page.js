@@ -1,13 +1,14 @@
-import { createClient } from '@supabase/supabase-js'
 import AnnonseKlient from './AnnonseKlient'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+import { createClient } from '@supabase/supabase-js'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+
   const { data: annonse } = await supabase
     .from('annonser')
     .select('tittel, beskrivelse, bilder')
