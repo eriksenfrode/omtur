@@ -151,6 +151,8 @@ export default function Annonse() {
     ? budrunde.navarende_bud + budrunde.minimumshopp
     : budrunde.startpris)
 
+  const erEier = session?.user?.id === annonse?.bruker_id
+
   return (
     <main className="max-w-xl mx-auto p-6">
       <a href="/annonser" className="text-sm text-gray-400 hover:text-gray-600 mb-4 block">
@@ -202,7 +204,11 @@ export default function Annonse() {
       )}
 
       <h1 className="text-2xl font-medium mb-1">{annonse.tittel}</h1>
-      <p className="text-gray-400 text-sm mb-4">{annonse.merke} · {annonse.stand} · {annonse.kategori}</p>
+      <p className="text-gray-400 text-sm mb-1">{annonse.merke} · {annonse.stand} · {annonse.kategori}</p>
+      {annonse.postnummer && (
+        <p className="text-gray-400 text-sm mb-4">Sted: {annonse.postnummer}</p>
+      )}
+      {!annonse.postnummer && <div className="mb-4" />}
       <p className="text-gray-600 mb-6">{annonse.beskrivelse}</p>
 
       {budrunde && (
@@ -226,8 +232,27 @@ export default function Annonse() {
             </div>
           </div>
 
-          {budrunde.status !== 'avsluttet' && (
-            <div className="space-y-3">
+          {bud.length > 0 && (
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              <p className="text-xs text-gray-400 mb-3">Budhistorikk</p>
+              {bud.map((b, i) => (
+                <div key={b.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">
+                      {i === 0 ? 'Høyeste bud' : 'Bud ' + (bud.length - i)}
+                    </p>
+                    <p className="text-xs text-gray-400">{new Date(b.opprettet).toLocaleString('no-NO')}</p>
+                  </div>
+                  <span className={'font-medium ' + (i === 0 ? 'text-emerald-600' : 'text-gray-400')}>
+                    {b.belop} kr
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {budrunde.status !== 'avsluttet' && !erEier && (
+            <div className="space-y-3 mt-4">
               {session ? (
                 <>
                   <div className="grid grid-cols-2 gap-3">
@@ -302,22 +327,15 @@ export default function Annonse() {
             </div>
           )}
 
-          {bud.length > 0 && (
-            <div className="mt-4 border-t border-gray-200 pt-4">
-              <p className="text-xs text-gray-400 mb-3">Budhistorikk</p>
-              {bud.map((b, i) => (
-                <div key={b.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">
-                      {i === 0 ? 'Høyeste bud' : 'Bud ' + (bud.length - i)}
-                    </p>
-                    <p className="text-xs text-gray-400">{new Date(b.opprettet).toLocaleString('no-NO')}</p>
-                  </div>
-                  <span className={'font-medium ' + (i === 0 ? 'text-emerald-600' : 'text-gray-400')}>
-                    {b.belop} kr
-                  </span>
-                </div>
-              ))}
+          {erEier && budrunde.status !== 'avsluttet' && (
+            <div className="mt-4">
+              <a
+                href={'/annonser/' + id + '/rediger'}
+                className="inline-block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-center"
+                style={{ textDecoration: 'none' }}
+              >
+                Rediger annonse
+              </a>
             </div>
           )}
         </div>
