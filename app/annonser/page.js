@@ -5,13 +5,18 @@ export default function Annonser() {
   const [annonser, setAnnonser] = useState([])
   const [laster, setLaster] = useState(true)
   const [filter, setFilter] = useState('Alle')
+  const [session, setSession] = useState(null)
 
   const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Jakker og vinterklær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
 
   useEffect(() => {
-    async function hentAnnonser() {
+    async function init() {
       setLaster(true)
       const { supabase } = await import('../../lib/supabase')
+
+      const { data: authData } = await supabase.auth.getSession()
+      setSession(authData.session)
+
       const { data, error } = await supabase
         .from('annonser')
         .select('*')
@@ -21,7 +26,7 @@ export default function Annonser() {
       if (!error) setAnnonser(data)
       setLaster(false)
     }
-    hentAnnonser()
+    init()
   }, [])
 
   const filtrerte = filter === 'Alle'
@@ -35,9 +40,20 @@ export default function Annonser() {
           <h1 className="text-2xl font-medium">OmTur</h1>
           <p className="text-gray-500 text-sm">Klær og utstyr til sport, fritid og friluftsliv på Helgeland</p>
         </div>
-        <a href="/" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
-          Selg utstyr
-        </a>
+        <div className="flex items-center gap-2">
+          {session ? (
+            <a href="/min-side" className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:border-gray-300">
+              Min side
+            </a>
+          ) : (
+            <a href="/logginn" className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:border-gray-300">
+              Logg inn
+            </a>
+          )}
+          <a href="/" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
+            Selg utstyr
+          </a>
+        </div>
       </div>
 
       <div className="flex gap-2 flex-wrap mb-6">
