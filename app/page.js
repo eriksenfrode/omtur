@@ -4,6 +4,16 @@ import { supabase } from '../lib/supabase'
 
 export default function Forside() {
   const [annonser, setAnnonser] = useState([])
+  const [visBoks, setVisBoks] = useState(false)
+
+  useEffect(() => {
+    if (!localStorage.getItem('testperiode-lukket')) setVisBoks(true)
+  }, [])
+
+  function lukkBoks() {
+    localStorage.setItem('testperiode-lukket', '1')
+    setVisBoks(false)
+  }
 
   useEffect(() => {
     supabase
@@ -20,7 +30,7 @@ export default function Forside() {
       {/* Toppmeny */}
       <nav style={{borderBottom: '1px solid #f3f4f6', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '896px', margin: '0 auto'}}>
         <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-          <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981'}}></div>
+          <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
           <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
@@ -29,13 +39,35 @@ export default function Forside() {
         </div>
       </nav>
 
+      {/* Infoboks testperiode */}
+      {visBoks && (
+        <div style={{maxWidth: '896px', margin: '16px auto 0', padding: '0 24px'}}>
+          <div style={{background: '#fffbeb', border: '1px solid #f59e0b', borderRadius: '12px', padding: '16px 20px', position: 'relative'}}>
+            <button
+              onClick={lukkBoks}
+              style={{position: 'absolute', top: '10px', right: '14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#92400e', lineHeight: 1}}
+              aria-label="Lukk"
+            >
+              ×
+            </button>
+            <p style={{fontWeight: 600, color: '#92400e', marginBottom: '6px'}}>Vi er i testperiode!</p>
+            <p style={{color: '#78350f', fontSize: '14px', lineHeight: '1.5', paddingRight: '24px'}}>
+              OmTur er gratis å bruke i testperioden. Er du interessert i å prøve tjenesten som selger?{' '}
+              Send e-post til{' '}
+              <a href="mailto:hei@omtur.no" style={{color: '#b45309', textDecoration: 'underline', fontWeight: 500}}>hei@omtur.no</a>
+              {' '}så gir vi deg tilgang.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Hero */}
       <section style={{maxWidth: '896px', margin: '0 auto', padding: '80px 24px', textAlign: 'center'}}>
         <div style={{display: 'inline-block', backgroundColor: '#ecfdf5', color: '#065f46', fontSize: '12px', fontWeight: '500', padding: '4px 12px', borderRadius: '20px', marginBottom: '20px'}}>
           Helgeland sin egen markedsplass for brukt utstyr
         </div>
         <h1 style={{fontSize: '38px', fontWeight: '500', marginBottom: '20px', lineHeight: '1.3'}}>
-          Selg brukt klær og utstyr til sport, fritid og friluftsliv.<br />
+          Selg brukte klær og utstyr til sport, fritid og friluftsliv.<br />
           <span style={{color: '#059669'}}>KI gjør jobben for deg.</span>
         </h1>
         <p style={{color: '#6b7280', fontSize: '18px', marginBottom: '40px', maxWidth: '560px', margin: '0 auto 40px', lineHeight: '1.7'}}>

@@ -354,7 +354,7 @@ export default function LagAnnonse() {
               >
                 <option>Telt og sov</option>
                 <option>Sekker og pakking</option>
-                <option>Jakker og vinterklær</option>
+                <option>Klær</option>
                 <option>Bukser og shorts</option>
                 <option>Sko og støvler</option>
                 <option>Ski og vinter</option>
@@ -493,7 +493,10 @@ export default function LagAnnonse() {
   if (erMobil) {
     return (
       <main style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 24 }}>OmTur</h1>
+        <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 24}}>
+          <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
+          <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
+        </div>
         {skjema}
         <div style={{ marginTop: 40, paddingTop: 32, borderTop: '1px solid #f3f4f6' }}>
           {mineAnnonserPanel}
@@ -504,7 +507,10 @@ export default function LagAnnonse() {
 
   return (
     <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
-      <h1 style={{ fontSize: 22, fontWeight: 600, marginBottom: 32 }}>OmTur</h1>
+      <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 32}}>
+        <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
+        <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
+      </div>
       <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
         <div style={{ width: '40%', flexShrink: 0 }}>
           {mineAnnonserPanel}

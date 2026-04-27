@@ -6,8 +6,18 @@ export default function Annonser() {
   const [laster, setLaster] = useState(true)
   const [filter, setFilter] = useState('Alle')
   const [session, setSession] = useState(null)
+  const [visBoks, setVisBoks] = useState(false)
 
-  const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Jakker og vinterklær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
+  useEffect(() => {
+    if (!localStorage.getItem('testperiode-lukket')) setVisBoks(true)
+  }, [])
+
+  function lukkBoks() {
+    localStorage.setItem('testperiode-lukket', '1')
+    setVisBoks(false)
+  }
+
+  const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Klær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
 
   useEffect(() => {
     async function init() {
@@ -37,7 +47,10 @@ export default function Annonser() {
     <main className="max-w-2xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-medium">OmTur</h1>
+          <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+            <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
+            <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
+          </div>
           <p className="text-gray-500 text-sm">Klær og utstyr til sport, fritid og friluftsliv på Helgeland</p>
         </div>
         <div className="flex items-center gap-2">
@@ -55,6 +68,25 @@ export default function Annonser() {
           </a>
         </div>
       </div>
+
+      {visBoks && (
+        <div style={{ background: '#fffbeb', border: '1px solid #f59e0b', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', position: 'relative' }}>
+          <button
+            onClick={lukkBoks}
+            style={{ position: 'absolute', top: '10px', right: '14px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#92400e', lineHeight: 1 }}
+            aria-label="Lukk"
+          >
+            ×
+          </button>
+          <p style={{ fontWeight: 600, color: '#92400e', marginBottom: '6px' }}>Vi er i testperiode!</p>
+          <p style={{ color: '#78350f', fontSize: '14px', lineHeight: '1.5', paddingRight: '24px' }}>
+            OmTur er gratis å bruke i testperioden. Er du interessert i å prøve tjenesten som selger?{' '}
+            Send e-post til{' '}
+            <a href="mailto:hei@omtur.no" style={{ color: '#b45309', textDecoration: 'underline', fontWeight: 500 }}>hei@omtur.no</a>
+            {' '}så gir vi deg tilgang.
+          </p>
+        </div>
+      )}
 
       <div className="flex gap-2 flex-wrap mb-6">
         {kategorier.map(k => (
