@@ -317,7 +317,7 @@ export default function AnnonseKlient() {
                 </div>
               )}
               <a
-                href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/api/og/' + id)}
+                href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/annonser/' + id)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', backgroundColor: '#1877F2', color: 'white', padding: '12px', borderRadius: '10px', fontWeight: '500', fontSize: '15px', textDecoration: 'none', marginTop: '12px'}}
