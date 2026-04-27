@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
     return [
       {
-        source: '/annonser/:path*',
+        source: '/(.*)',
         headers: [
           {
             key: 'X-Robots-Tag',
@@ -13,6 +12,8 @@ const nextConfig = {
       },
     ]
   },
-};
-
-export default nextConfig;
+  async rewrites() {
+    return []
+  },
+}
+export default nextConfig
