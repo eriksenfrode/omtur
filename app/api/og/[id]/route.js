@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-export async function GET(request, { params }) {
+export async function GET(_request, { params }) {
   const { id } = await params
 
   const supabase = createClient(
@@ -44,7 +44,9 @@ export async function GET(request, { params }) {
     status: 200,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
+      'Access-Control-Allow-Origin': '*',
+      'X-Frame-Options': 'ALLOWALL',
+      'Cache-Control': 'public, max-age=0, must-revalidate',
     }
   })
 }

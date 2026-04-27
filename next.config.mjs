@@ -10,10 +10,28 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/api/og/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET',
+          },
+        ],
+      },
     ]
   },
   async rewrites() {
-    return []
+    return [
+      {
+        source: '/api/og/:id',
+        destination: '/api/og/:id',
+      },
+    ]
   },
 }
 export default nextConfig
