@@ -1,4 +1,14 @@
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'query', key: 'fbclid' }],
+        destination: '/:path*',
+        permanent: false,
+      },
+    ]
+  },
   async headers() {
     return [
       {
