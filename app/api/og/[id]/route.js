@@ -33,7 +33,6 @@ export async function GET(_request, { params }) {
   <meta property="og:url" content="${url}">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="OmTur">
-  <meta http-equiv="refresh" content="0; url=${url}">
 </head>
 <body>
   <p>Laster annonse...</p>
