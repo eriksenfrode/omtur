@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
+import Navbar from '../components/Navbar'
 
 export default function LagAnnonse() {
   const router = useRouter()
@@ -492,31 +493,29 @@ export default function LagAnnonse() {
 
   if (erMobil) {
     return (
-      <main style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px' }}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 24}}>
-          <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
-          <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-        </div>
-        {skjema}
-        <div style={{ marginTop: 40, paddingTop: 32, borderTop: '1px solid #f3f4f6' }}>
-          {mineAnnonserPanel}
+      <main>
+        <Navbar />
+        <div style={{ maxWidth: 600, margin: '0 auto', padding: '24px 16px' }}>
+          {skjema}
+          <div style={{ marginTop: 40, paddingTop: 32, borderTop: '1px solid #f3f4f6' }}>
+            {mineAnnonserPanel}
+          </div>
         </div>
       </main>
     )
   }
 
   return (
-    <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
-      <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: 32}}>
-        <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
-        <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-      </div>
-      <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
-        <div style={{ width: '40%', flexShrink: 0 }}>
-          {mineAnnonserPanel}
-        </div>
-        <div style={{ flex: 1 }}>
-          {skjema}
+    <main>
+      <Navbar />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 32px' }}>
+        <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start' }}>
+          <div style={{ width: '40%', flexShrink: 0 }}>
+            {mineAnnonserPanel}
+          </div>
+          <div style={{ flex: 1 }}>
+            {skjema}
+          </div>
         </div>
       </div>
     </main>

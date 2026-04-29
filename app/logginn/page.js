@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import Navbar from '../components/Navbar'
 
 export default function LoggInn() {
   const [epost, setEpost] = useState('')
@@ -24,11 +25,9 @@ export default function LoggInn() {
   }
 
   return (
-    <main style={{maxWidth: '400px', margin: '120px auto', padding: '0 24px'}}>
-      <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px'}}>
-        <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981'}}></div>
-        <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-      </div>
+    <main>
+      <Navbar />
+      <div style={{maxWidth: '400px', margin: '80px auto', padding: '0 24px'}}>
       <h1 style={{fontSize: '24px', fontWeight: '500', marginBottom: '8px'}}>Logg inn</h1>
       <p style={{color: '#6b7280', fontSize: '14px', marginBottom: '32px'}}>Kun for godkjente selgere.</p>
 
@@ -71,6 +70,7 @@ export default function LoggInn() {
         <p style={{fontSize: '13px', color: '#9ca3af'}}>
           Ønsker du å teste tjenesten? Ta kontakt på <a href="mailto:hei@omtur.no" style={{color: '#059669', textDecoration: 'none'}}>hei@omtur.no</a>
         </p>
+      </div>
       </div>
     </main>
   )

@@ -1,6 +1,10 @@
+import Navbar from '../components/Navbar'
+
 export default function Vilkar() {
   return (
-    <main className="max-w-2xl mx-auto p-6">
+    <main>
+      <Navbar />
+      <div className="max-w-2xl mx-auto p-6">
       <a href="/annonser" className="text-sm text-gray-400 hover:text-gray-600 mb-6 block">
         Tilbake til annonser
       </a>
@@ -87,6 +91,7 @@ export default function Vilkar() {
 
       <div className="mt-10 pt-6 border-t border-gray-100 text-center">
         <a href="/annonser" className="text-xs text-gray-400 hover:text-gray-600">Tilbake til annonser</a>
+      </div>
       </div>
     </main>
   )

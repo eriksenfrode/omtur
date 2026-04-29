@@ -1,18 +1,9 @@
+import Navbar from '../components/Navbar'
+
 export default function OmOss() {
   return (
     <main>
-      {/* Toppmeny */}
-      <nav style={{borderBottom: '1px solid #f3f4f6', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '896px', margin: '0 auto'}}>
-        <a href="/" style={{display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'inherit'}}>
-          <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
-          <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-        </a>
-        <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
-          <a href="/annonser" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Se annonser</a>
-          <a href="/om-oss" style={{fontSize: '14px', color: '#059669', fontWeight: '500', textDecoration: 'none'}}>Om oss</a>
-          <a href="/logginn" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Logg inn</a>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero */}
       <section style={{maxWidth: '896px', margin: '0 auto', padding: '72px 24px 64px', textAlign: 'center'}}>

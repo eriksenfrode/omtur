@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import Navbar from './components/Navbar'
 
 export default function Forside() {
   const [annonser, setAnnonser] = useState([])
@@ -27,18 +28,7 @@ export default function Forside() {
 
   return (
     <main>
-      {/* Toppmeny */}
-      <nav style={{borderBottom: '1px solid #f3f4f6', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', maxWidth: '896px', margin: '0 auto'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-          <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
-          <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-        </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
-          <a href="/annonser" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Se annonser</a>
-          <a href="/om-oss" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Om oss</a>
-          <a href="/logginn" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Logg inn</a>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Infoboks testperiode */}
       {visBoks && (

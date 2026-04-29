@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Navbar from '../components/Navbar'
 
 export default function Annonser() {
   const [annonser, setAnnonser] = useState([])
@@ -44,33 +45,9 @@ export default function Annonser() {
     : annonser.filter(a => a.kategori === filter)
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-            <img src="/logo.svg" alt="OmTur logo" style={{height: '32px', width: 'auto'}} />
-            <span style={{fontWeight: '500', fontSize: '18px'}}>OmTur</span>
-          </div>
-          <p className="text-gray-500 text-sm">Klær og utstyr til sport, fritid og friluftsliv på Helgeland</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <a href="/om-oss" className="text-sm text-gray-500 hover:text-gray-700">
-            Om oss
-          </a>
-          {session ? (
-            <a href="/min-side" className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:border-gray-300">
-              Min side
-            </a>
-          ) : (
-            <a href="/logginn" className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:border-gray-300">
-              Logg inn
-            </a>
-          )}
-          <a href="/" className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
-            Selg utstyr
-          </a>
-        </div>
-      </div>
+    <main>
+      <Navbar />
+      <div className="max-w-2xl mx-auto p-6">
 
       {visBoks && (
         <div style={{ background: '#fffbeb', border: '1px solid #f59e0b', borderRadius: '12px', padding: '16px 20px', marginBottom: '20px', position: 'relative' }}>
@@ -134,6 +111,7 @@ export default function Annonser() {
           ))}
         </div>
       )}
+      </div>
     </main>
   )
 }

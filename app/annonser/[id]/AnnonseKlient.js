@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
+import Navbar from '../../components/Navbar'
 
 export default function AnnonseKlient() {
   const { id } = useParams()
@@ -145,7 +146,7 @@ export default function AnnonseKlient() {
     alert('Budet er registrert! Du vil få bekreftelse på e-post.')
   }
 
-  if (!annonse) return <main className="max-w-xl mx-auto p-6"><p className="text-gray-400">Laster...</p></main>
+  if (!annonse) return <main><Navbar /><div className="max-w-xl mx-auto p-6"><p className="text-gray-400">Laster...</p></div></main>
 
   const minBud = !budrunde ? annonse.pris : (bud.length > 0
     ? budrunde.navarende_bud + budrunde.minimumshopp
@@ -154,7 +155,9 @@ export default function AnnonseKlient() {
   const erEier = session?.user?.id === annonse?.bruker_id
 
   return (
-    <main className="max-w-xl mx-auto p-6">
+    <main>
+      <Navbar />
+      <div className="max-w-xl mx-auto p-6">
       <a href="/annonser" className="text-sm text-gray-400 hover:text-gray-600 mb-4 block">
         Tilbake til annonser
       </a>
@@ -343,6 +346,7 @@ export default function AnnonseKlient() {
 
       <div className="text-center mt-4">
         <a href="/vilkar" className="text-xs text-gray-400 hover:text-gray-600">Vilkår og personvern</a>
+      </div>
       </div>
     </main>
   )
