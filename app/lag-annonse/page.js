@@ -96,6 +96,10 @@ export default function LagAnnonse() {
   async function publiserAnnonse() {
     setPubliserer(true)
 
+    const { data: { session: currentSession } } = await supabase.auth.getSession()
+    const selgerEpost = currentSession?.user?.email ?? ''
+    const selgerNavn = currentSession?.user?.user_metadata?.navn ?? ''
+
     const sorterteBilder = [
       bilder[forsideBildeIndex],
       ...bilder.filter((_, i) => i !== forsideBildeIndex)
@@ -131,7 +135,9 @@ export default function LagAnnonse() {
         bilder: bildeUrler,
         status: 'aktiv',
         salgstype: 'budrunde',
-        bruker_id: session.user.id
+        bruker_id: session.user.id,
+        selger_epost: selgerEpost,
+        selger_navn: selgerNavn
       })
       .select()
       .single()

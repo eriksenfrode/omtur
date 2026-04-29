@@ -4,7 +4,8 @@ export async function POST(request) {
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   try {
-    const { type, annonse, bud, tidligereBudgivere } = await request.json()
+    const request_body = await request.json()
+    const { type, annonse, bud, tidligereBudgivere } = request_body
 
     if (type === 'overbydd') {
       for (const budgiver of tidligereBudgivere) {
@@ -51,6 +52,30 @@ export async function POST(request) {
           'Se budrunden' +
           '</a>' +
           '<p style="color: #999; font-size: 12px; margin-top: 24px;">OmTur — Brukt friluftsutstyr på Helgeland</p>' +
+          '</div>'
+      })
+    }
+
+    if (type === 'budrunde_avsluttet') {
+      await resend.emails.send({
+        from: 'OmTur <ingen-svar@omtur.no>',
+        to: request_body.selger_epost,
+        subject: 'Budrunden er avsluttet — ' + request_body.tittel,
+        html: '<div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">' +
+          '<h2 style="color: #085041;">Budrunden er avsluttet!</h2>' +
+          '<p>Din annonse <strong>' + request_body.tittel + '</strong> er solgt!</p>' +
+          '<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">' +
+          '<tr><td style="padding: 8px; color: #666;">Vinner</td>' +
+          '<td style="padding: 8px; font-weight: bold;">' + request_body.vinner_navn + '</td></tr>' +
+          '<tr><td style="padding: 8px; color: #666;">E-post</td>' +
+          '<td style="padding: 8px;">' + request_body.vinner_epost + '</td></tr>' +
+          '<tr><td style="padding: 8px; color: #666;">Telefon</td>' +
+          '<td style="padding: 8px;">' + request_body.vinner_telefon + '</td></tr>' +
+          '<tr><td style="padding: 8px; color: #666;">Vinnende bud</td>' +
+          '<td style="padding: 8px; font-weight: bold; color: #1D9E75;">' + request_body.vinner_belop + ' kr</td></tr>' +
+          '</table>' +
+          '<p>Ta kontakt med vinneren for å avtale overlevering eller frakt.</p>' +
+          '<p style="color: #999; font-size: 12px; margin-top: 24px;">OmTur — Brukte klær og utstyr til sport, fritid og friluftsliv</p>' +
           '</div>'
       })
     }
