@@ -10,12 +10,16 @@ export default function LagAnnonse() {
   const [mineAnnonser, setMineAnnonser] = useState([])
   const [erMobil, setErMobil] = useState(false)
 
+  const [seksjon, setSeksjon] = useState('sport')
   const [bilder, setBilder] = useState([])
   const [forhåndsvisninger, setForhåndsvisninger] = useState([])
   const [forsideBildeIndex, setForsideBildeIndex] = useState(0)
   const [laster, setLaster] = useState(false)
   const [publiserer, setPubliserer] = useState(false)
   const [resultat, setResultat] = useState(null)
+
+  const sportKategorier = ['Telt og sov', 'Sekker og pakking', 'Klær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
+  const barnKategorier = ['Klær (0-2 år)', 'Klær (2-6 år)', 'Klær (6-12 år)', 'Klær (12-16 år)', 'Leker og spill', 'Barnevogn og transport', 'Sykkel og sparkesykkel', 'Ski og vinterutstyr barn', 'Annet barn']
 
   useEffect(() => {
     function sjekkBredde() {
@@ -66,8 +70,8 @@ export default function LagAnnonse() {
 
     const base64Bilder = await Promise.all(
       bilder.map(async bilde => ({
-        data: await tilBase64(bilde),
-        type: bilde.type
+        data: await komprimer(bilde),
+        type: 'image/jpeg'
       }))
     )
 
@@ -86,6 +90,39 @@ export default function LagAnnonse() {
       const reader = new FileReader()
       reader.onload = () => resolve(reader.result.split(',')[1])
       reader.readAsDataURL(fil)
+    })
+  }
+
+  async function komprimer(fil) {
+    return new Promise((resolve) => {
+      const img = new Image()
+      const url = URL.createObjectURL(fil)
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const maxBredde = 1200
+        const maxHoyde = 1200
+        let bredde = img.width
+        let hoyde = img.height
+
+        if (bredde > maxBredde) {
+          hoyde = Math.round(hoyde * maxBredde / bredde)
+          bredde = maxBredde
+        }
+        if (hoyde > maxHoyde) {
+          bredde = Math.round(bredde * maxHoyde / hoyde)
+          hoyde = maxHoyde
+        }
+
+        canvas.width = bredde
+        canvas.height = hoyde
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, bredde, hoyde)
+
+        const komprimert = canvas.toDataURL('image/jpeg', 0.7).split(',')[1]
+        URL.revokeObjectURL(url)
+        resolve(komprimert)
+      }
+      img.src = url
     })
   }
 
@@ -135,6 +172,7 @@ export default function LagAnnonse() {
         bilder: bildeUrler,
         status: 'aktiv',
         salgstype: 'budrunde',
+        seksjon: seksjon,
         bruker_id: session.user.id,
         selger_epost: selgerEpost,
         selger_navn: selgerNavn
@@ -180,6 +218,40 @@ export default function LagAnnonse() {
   const skjema = (
     <div>
       <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Ny annonse</h2>
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        <button
+          onClick={() => setSeksjon('sport')}
+          style={{
+            padding: '8px 16px',
+            borderRadius: 99,
+            fontSize: 14,
+            fontWeight: 500,
+            cursor: 'pointer',
+            border: seksjon === 'sport' ? 'none' : '1px solid #e5e7eb',
+            background: seksjon === 'sport' ? '#059669' : '#fff',
+            color: seksjon === 'sport' ? '#fff' : '#374151'
+          }}
+        >
+          Sport, fritid og friluft
+        </button>
+        <button
+          onClick={() => setSeksjon('barn')}
+          style={{
+            padding: '8px 16px',
+            borderRadius: 99,
+            fontSize: 14,
+            fontWeight: 500,
+            cursor: 'pointer',
+            border: seksjon === 'barn' ? 'none' : '1px solid #e5e7eb',
+            background: seksjon === 'barn' ? '#059669' : '#fff',
+            color: seksjon === 'barn' ? '#fff' : '#374151'
+          }}
+        >
+          Barn
+        </button>
+      </div>
+
       <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 24 }}>Last opp bilder av utstyret — KI gjør resten</p>
 
       <div style={{
@@ -359,17 +431,9 @@ export default function LagAnnonse() {
                 value={resultat.kategori}
                 onChange={e => oppdater('kategori', e.target.value)}
               >
-                <option>Telt og sov</option>
-                <option>Sekker og pakking</option>
-                <option>Klær</option>
-                <option>Bukser og shorts</option>
-                <option>Sko og støvler</option>
-                <option>Ski og vinter</option>
-                <option>Sykkel</option>
-                <option>Klatring</option>
-                <option>Vannaktiviteter</option>
-                <option>Annet utstyr</option>
-                <option>Annet klær</option>
+                {(seksjon === 'barn' ? barnKategorier : sportKategorier).map(k => (
+                  <option key={k}>{k}</option>
+                ))}
               </select>
             </div>
             <div>

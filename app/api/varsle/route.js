@@ -80,6 +80,25 @@ export async function POST(request) {
       })
     }
 
+    if (type === 'vinner_varsling') {
+      await resend.emails.send({
+        from: 'OmTur <ingen-svar@omtur.no>',
+        to: request_body.vinner_epost,
+        subject: 'Gratulerer — du vant budrunden på ' + request_body.tittel,
+        html: '<div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">' +
+          '<h2 style="color: #085041;">Gratulerer! Du vant budrunden!</h2>' +
+          '<p>Hei ' + request_body.vinner_navn + '!</p>' +
+          '<p>Du har vunnet budrunden på <strong>' + request_body.tittel + '</strong>.</p>' +
+          '<table style="width: 100%; border-collapse: collapse; margin: 16px 0;">' +
+          '<tr><td style="padding: 8px; color: #666;">Ditt vinnende bud</td>' +
+          '<td style="padding: 8px; font-weight: bold; color: #1D9E75;">' + request_body.vinner_belop + ' kr</td></tr>' +
+          '</table>' +
+          '<p>Selger vil ta kontakt med deg snart for å avtale overlevering eller frakt.</p>' +
+          '<p style="color: #999; font-size: 12px; margin-top: 24px;">OmTur — Brukte klær og utstyr til sport, fritid og friluftsliv</p>' +
+          '</div>'
+      })
+    }
+
     return Response.json({ ok: true })
   } catch (feil) {
     console.error('E-postfeil:', feil.message)

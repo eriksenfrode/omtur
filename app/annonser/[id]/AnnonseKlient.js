@@ -16,11 +16,9 @@ export default function AnnonseKlient() {
   const [sender, setSender] = useState(false)
   const [tidIgjen, setTidIgjen] = useState(null)
   const [aktivtBilde, setAktivtBilde] = useState(0)
-  const [session, setSession] = useState(undefined)
 
   useEffect(() => {
     hentAnnonse()
-    supabase.auth.getSession().then(({ data }) => setSession(data.session))
   }, [])
 
   useEffect(() => {
@@ -152,8 +150,6 @@ export default function AnnonseKlient() {
     ? budrunde.navarende_bud + budrunde.minimumshopp
     : budrunde.startpris)
 
-  const erEier = session?.user?.id === annonse?.bruker_id
-
   return (
     <main>
       <Navbar />
@@ -254,71 +250,60 @@ export default function AnnonseKlient() {
             </div>
           )}
 
-          {budrunde.status !== 'avsluttet' && !erEier && (
+          {budrunde.status !== 'avsluttet' && (
             <div className="space-y-3 mt-4">
-              {session ? (
-                <>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs text-gray-400">Ditt navn</label>
-                      <input
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
-                        value={navn}
-                        onChange={e => setNavn(e.target.value)}
-                        placeholder="Ola Nordmann"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-gray-400">E-post</label>
-                      <input
-                        type="email"
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
-                        value={epost}
-                        onChange={e => setEpost(e.target.value)}
-                        placeholder="ola@epost.no"
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="text-xs text-gray-400">Telefon</label>
-                      <input
-                        type="tel"
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
-                        value={telefon}
-                        onChange={e => setTelefon(e.target.value)}
-                        placeholder="987 65 432"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-400">
-                      Ditt bud (minimum {minBud} kr)
-                    </label>
-                    <input
-                      type="number"
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
-                      value={budbelop}
-                      onChange={e => setBudbelop(e.target.value)}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-400">
-                    Navn, e-post og telefon er kun synlig for OmTur og selger etter avsluttet budrunde. Ikke synlig for andre budgivere.
-                  </p>
-                  <button
-                    onClick={leggInnBud}
-                    disabled={sender}
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium disabled:opacity-50"
-                  >
-                    {sender ? 'Registrerer bud...' : 'Legg inn bud'}
-                  </button>
-                </>
-              ) : (
-                <div className="text-center py-4">
-                  <p className="text-sm text-gray-500 mb-3">
-                    <a href="/logginn" className="text-emerald-600 hover:text-emerald-700 font-medium">Logg inn</a>
-                    {' '}for å legge inn bud
-                  </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-gray-400">Ditt navn</label>
+                  <input
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={navn}
+                    onChange={e => setNavn(e.target.value)}
+                    placeholder="Ola Nordmann"
+                  />
                 </div>
-              )}
+                <div>
+                  <label className="text-xs text-gray-400">E-post</label>
+                  <input
+                    type="email"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={epost}
+                    onChange={e => setEpost(e.target.value)}
+                    placeholder="ola@epost.no"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs text-gray-400">Telefon</label>
+                  <input
+                    type="tel"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                    value={telefon}
+                    onChange={e => setTelefon(e.target.value)}
+                    placeholder="987 65 432"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-gray-400">
+                  Ditt bud (minimum {minBud} kr)
+                </label>
+                <input
+                  type="number"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mt-1 bg-white"
+                  value={budbelop}
+                  onChange={e => setBudbelop(e.target.value)}
+                />
+              </div>
+              <p className="text-xs text-gray-400">
+                Navn, e-post og telefon er kun synlig for OmTur og selger etter avsluttet budrunde. Ikke synlig for andre budgivere.
+              </p>
+              <button
+                onClick={leggInnBud}
+                disabled={sender}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium disabled:opacity-50"
+              >
+                {sender ? 'Registrerer bud...' : 'Legg inn bud'}
+              </button>
               <a
                 href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/annonser/' + id)}
                 target="_blank"
@@ -326,18 +311,6 @@ export default function AnnonseKlient() {
                 style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', backgroundColor: '#1877F2', color: 'white', padding: '12px', borderRadius: '10px', fontWeight: '500', fontSize: '15px', textDecoration: 'none', marginTop: '12px'}}
               >
                 <span style={{fontWeight: 'bold', fontSize: '18px'}}>f</span> Del på Facebook
-              </a>
-            </div>
-          )}
-
-          {erEier && budrunde.status !== 'avsluttet' && (
-            <div className="mt-4">
-              <a
-                href={'/annonser/' + id + '/rediger'}
-                className="inline-block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-center"
-                style={{ textDecoration: 'none' }}
-              >
-                Rediger annonse
               </a>
             </div>
           )}

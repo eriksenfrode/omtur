@@ -5,8 +5,8 @@ import Navbar from '../components/Navbar'
 export default function Annonser() {
   const [annonser, setAnnonser] = useState([])
   const [laster, setLaster] = useState(true)
+  const [seksjon, setSeksjon] = useState('sport')
   const [filter, setFilter] = useState('Alle')
-  const [session, setSession] = useState(null)
   const [visBoks, setVisBoks] = useState(false)
 
   useEffect(() => {
@@ -18,15 +18,14 @@ export default function Annonser() {
     setVisBoks(false)
   }
 
-  const kategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Klær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
+  const sportKategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Klær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
+  const barnKategorier = ['Alle', 'Klær (0-2 år)', 'Klær (2-6 år)', 'Klær (6-12 år)', 'Klær (12-16 år)', 'Leker og spill', 'Barnevogn og transport', 'Sykkel og sparkesykkel', 'Ski og vinterutstyr barn', 'Annet barn']
+  const kategorier = seksjon === 'barn' ? barnKategorier : sportKategorier
 
   useEffect(() => {
     async function init() {
       setLaster(true)
       const { supabase } = await import('../../lib/supabase')
-
-      const { data: authData } = await supabase.auth.getSession()
-      setSession(authData.session)
 
       const { data, error } = await supabase
         .from('annonser')
@@ -40,9 +39,18 @@ export default function Annonser() {
     init()
   }, [])
 
+  function byttSeksjon(ny) {
+    setSeksjon(ny)
+    setFilter('Alle')
+  }
+
+  const seksjonFiltrert = seksjon === 'barn'
+    ? annonser.filter(a => a.seksjon === 'barn')
+    : annonser.filter(a => !a.seksjon || a.seksjon === 'sport')
+
   const filtrerte = filter === 'Alle'
-    ? annonser
-    : annonser.filter(a => a.kategori === filter)
+    ? seksjonFiltrert
+    : seksjonFiltrert.filter(a => a.kategori === filter)
 
   return (
     <main>
@@ -67,6 +75,21 @@ export default function Annonser() {
           </p>
         </div>
       )}
+
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => byttSeksjon('sport')}
+          className={'px-4 py-2 rounded-full text-sm font-medium border ' + (seksjon === 'sport' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
+        >
+          Sport, fritid og friluft
+        </button>
+        <button
+          onClick={() => byttSeksjon('barn')}
+          className={'px-4 py-2 rounded-full text-sm font-medium border ' + (seksjon === 'barn' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
+        >
+          Barn
+        </button>
+      </div>
 
       <div className="flex gap-2 flex-wrap mb-6">
         {kategorier.map(k => (
