@@ -1,8 +1,27 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '../../lib/supabase'
 
 export default function Navbar() {
+  const router = useRouter()
   const [menyApen, setMenyApen] = useState(false)
+  const [innlogget, setInnlogget] = useState(false)
+
+  async function loggUt() {
+    await supabase.auth.signOut()
+    router.replace('/')
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setInnlogget(!!data.session)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setInnlogget(!!session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   return (
     <nav style={{borderBottom: '1px solid #f3f4f6', padding: '0 24px', position: 'relative'}}>
@@ -17,7 +36,14 @@ export default function Navbar() {
         <div className="navbar-desktop" style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
           <a href="/annonser" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Annonser</a>
           <a href="/om-oss" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Om oss</a>
-          <a href="/logginn" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Logg inn</a>
+          {innlogget ? (
+            <>
+              <a href="/profil" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Min profil</a>
+              <button onClick={loggUt} style={{fontSize: '14px', background: 'none', border: '1px solid #d1d5db', color: '#6b7280', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer'}}>Logg ut</button>
+            </>
+          ) : (
+            <a href="/logginn" style={{fontSize: '14px', backgroundColor: '#059669', color: 'white', padding: '10px 20px', borderRadius: '8px', textDecoration: 'none'}}>Logg inn</a>
+          )}
         </div>
 
         {/* Hamburger-knapp (mobil) */}
@@ -47,7 +73,14 @@ export default function Navbar() {
         <div className="navbar-mobile-menu" style={{position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'white', borderTop: '1px solid #f3f4f6', borderBottom: '1px solid #f3f4f6', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.08)'}}>
           <a href="/annonser" onClick={() => setMenyApen(false)} style={{fontSize: '15px', color: '#374151', textDecoration: 'none', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>Annonser</a>
           <a href="/om-oss" onClick={() => setMenyApen(false)} style={{fontSize: '15px', color: '#374151', textDecoration: 'none', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>Om oss</a>
-          <a href="/logginn" onClick={() => setMenyApen(false)} style={{fontSize: '15px', backgroundColor: '#059669', color: 'white', padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontWeight: '500'}}>Logg inn</a>
+          {innlogget ? (
+            <>
+              <a href="/profil" onClick={() => setMenyApen(false)} style={{fontSize: '15px', backgroundColor: '#059669', color: 'white', padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontWeight: '500'}}>Min profil</a>
+              <button onClick={() => { setMenyApen(false); loggUt() }} style={{fontSize: '15px', background: 'none', border: '1px solid #d1d5db', color: '#374151', padding: '12px 20px', borderRadius: '8px', cursor: 'pointer', textAlign: 'center', fontWeight: '500', width: '100%'}}>Logg ut</button>
+            </>
+          ) : (
+            <a href="/logginn" onClick={() => setMenyApen(false)} style={{fontSize: '15px', backgroundColor: '#059669', color: 'white', padding: '12px 20px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontWeight: '500'}}>Logg inn</a>
+          )}
         </div>
       )}
 

@@ -19,10 +19,18 @@ export default function Vilkar() {
         <p className="text-gray-600 mb-4 leading-relaxed">
           OmTur er en markedsplass for kjøp og salg av brukt klær og utstyr til sport, fritid og friluftsliv. Tjenesten er drevet av en privatperson og er for tiden i en testfase rettet mot brukere på Helgeland.
         </p>
+        <p className="text-gray-600 mb-4 leading-relaxed">
+          I oppstartsfasen aksepterer OmTur kun annonser i følgende kategorier: barneklær og barneutstyr, samt klær og utstyr til sport, fritid og friluftsliv. Annonser som ikke tilhører disse kategoriene kan bli fjernet.
+        </p>
 
         <h3 className="font-medium mb-2">Selgers ansvar</h3>
         <p className="text-gray-600 mb-4 leading-relaxed">
           Selger er ansvarlig for at informasjonen i annonsen er korrekt, inkludert beskrivelse av stand og eventuelle feil eller mangler ved utstyret. Produktbeskrivelsen genereres med kunstig intelligens og må godkjennes av selger før publisering. OmTur er ikke ansvarlig for feil i KI-generert innhold som selger har godkjent. Prisforslaget genereres av KI basert på analyse av lignende utstyr fra nettbutikker og bruktmarkeder. Dette er et estimat — selger godkjenner alltid prisen før publisering.
+        </p>
+
+        <h3 className="font-medium mb-2">Anonymitet ved budgivning</h3>
+        <p className="text-gray-600 mb-4 leading-relaxed">
+          Budgiveres identitet er beskyttet under hele budrunden. I budhistorikken vises kun beløp og tidspunkt — aldri navn, e-post eller telefonnummer. Kontaktinformasjon til vinneren deles kun med selger etter at budrunden er avsluttet, og kun via e-post direkte til selger. Andre budgivere får aldri tilgang til hverandres identitet.
         </p>
 
         <h3 className="font-medium mb-2">Budrunder</h3>

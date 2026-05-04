@@ -10,6 +10,7 @@ export default function LagAnnonse() {
   const [mineAnnonser, setMineAnnonser] = useState([])
   const [erMobil, setErMobil] = useState(false)
 
+  const [brukerPostnummer, setBrukerPostnummer] = useState('')
   const [seksjon, setSeksjon] = useState('sport')
   const [bilder, setBilder] = useState([])
   const [forhåndsvisninger, setForhåndsvisninger] = useState([])
@@ -37,6 +38,9 @@ export default function LagAnnonse() {
       } else {
         setSession(data.session)
         hentMineAnnonser(data.session.user.id)
+        supabase.from('brukere').select('postnummer').eq('id', data.session.user.id).single().then(({ data: bruker }) => {
+          if (bruker?.postnummer) setBrukerPostnummer(String(bruker.postnummer))
+        })
       }
     })
   }, [])
@@ -81,7 +85,7 @@ export default function LagAnnonse() {
       body: JSON.stringify({ bilder: base64Bilder })
     })
     const data = await svar.json()
-    setResultat({ ...data, minimumshopp: 50, postnummer: '' })
+    setResultat({ ...data, minimumshopp: 50, postnummer: brukerPostnummer })
     setLaster(false)
   }
 

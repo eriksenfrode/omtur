@@ -23,13 +23,20 @@ export default function OmOss() {
         <div style={{maxWidth: '640px', margin: '0 auto', padding: '0 24px'}}>
           <h2 style={{fontSize: '20px', fontWeight: '500', marginBottom: '24px'}}>Historien</h2>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px'}}>
-            OmTur ble startet av Frode Eriksen i Mo i Rana i 2026. Ideen kom fra observasjonen av at kjøp og salg i Facebook-grupper er tungvint — man må skrive annonsen selv, håndtere spørsmål, forhandle om pris og avtale møtetider. OmTur forenkler hele denne prosessen ved hjelp av kunstig intelligens.
+            OmTur ble startet av Frode Eriksen i Mo i Rana i 2026. Ideen kom fra en enkel observasjon: mange familier har store mengder klær og utstyr som bare blir liggende — barneklær barna har vokst ut av, ski som ikke brukes lenger, jakker og friluftsklær som tar plass i garasjen. Samtidig er det tungvint å selge på Facebook-grupper — man må skrive annonsen selv, håndtere spørsmål, forhandle om pris og avtale møtetider.
           </p>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px'}}>
-            I tillegg handler OmTur om noe større: ved å gjøre det enkelt å selge brukt utstyr, bidrar vi til at færre ting kastes og mer utstyr får et nytt liv. Det er bra for lommeboka og bra for miljøet.
+            OmTur forenkler hele prosessen ved hjelp av kunstig intelligens. Last opp et bilde — KI gjør resten.
           </p>
+          <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px'}}>
+            I oppstartsfasen fokuserer OmTur på to kategorier:
+          </p>
+          <ul style={{fontSize: '16px', color: '#374151', lineHeight: '1.8', marginBottom: '16px', paddingLeft: '24px'}}>
+            <li>Barneklær og barneutstyr</li>
+            <li>Klær og utstyr til sport, fritid og friluftsliv</li>
+          </ul>
           <p style={{fontSize: '16px', color: '#374151', lineHeight: '1.8'}}>
-            OmTur er startet på Helgeland og fokuserer på lokale kjøpere og selgere i første omgang.
+            OmTur er ikke en generell markedsplass for alt — vi fokuserer på det vi gjør best, og gjør det enkelt for folk på Helgeland å gi ting nytt liv.
           </p>
         </div>
       </section>

@@ -317,6 +317,35 @@ export default function AnnonseKlient() {
         </div>
       )}
 
+      <div className="border-t border-gray-200 mt-8 pt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <h3 className="text-base font-semibold text-emerald-800 mb-3">Vil du selge?</h3>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>📱</span><span><strong>Ta et bilde</strong> — Last opp bilde av utstyret</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>🤖</span><span><strong>KI gjør jobben</strong> — Annonsen skrives automatisk</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>🔨</span><span><strong>Budrunde starter</strong> — 24 timer, markedet bestemmer prisen</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>💰</span><span><strong>Du får betalt</strong> — Selger kontakter deg når du vinner</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-emerald-800 mb-3">Vil du kjøpe?</h3>
+            <ul className="space-y-2">
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>🔍</span><span><strong>Finn utstyr</strong> — Bla gjennom annonser på OmTur</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>💬</span><span><strong>Legg inn bud</strong> — Bare fyll inn navn, e-post og telefon</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>📧</span><span><strong>Få varsel</strong> — Du varsles hvis noen overbyr deg</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>🏆</span><span><strong>Du vinner</strong> — Selger kontakter deg for betaling og overlevering</span></li>
+            </ul>
+          </div>
+        </div>
+        <a
+          href="/annonser"
+          className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white text-center py-3 rounded-xl font-medium"
+        >
+          Se alle annonser
+        </a>
+      </div>
+
       <div className="text-center mt-4">
         <a href="/vilkar" className="text-xs text-gray-400 hover:text-gray-600">Vilkår og personvern</a>
       </div>

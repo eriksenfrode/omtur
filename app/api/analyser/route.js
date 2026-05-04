@@ -4,7 +4,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY
 })
 
-const PROMPT = 'Du er en ekspert på brukt klær og utstyr til sport, fritid og friluftsliv. Analyser disse bildene og returner KUN et JSON-objekt uten noe annet tekst: {"tittel": "kort tittel for annonsen", "merke": "merkenavnet eller Ukjent", "kategori": "en av: Telt og sov, Sekker og pakking, Klær, Bukser og shorts, Sko og støvler, Ski og vinter, Sykkel, Klatring, Vannaktiviteter, Annet utstyr, Annet klær", "stand": "en av: Ny, Lite brukt, Brukt, Slitt", "pris": tall i norske kroner uten kr-tegn, "beskrivelse": "2-3 setninger som beskriver varen og egner seg som annonsetekst"}'
+const PROMPT = 'Du er en ekspert på brukt klær og utstyr til sport, fritid, friluftsliv og barn. Les nøye all tekst og logoer som er synlige. Analyser disse bildene og returner KUN et JSON-objekt uten noe annet tekst: {"tittel": "kort tittel for annonsen", "merke": "merkenavnet eller Ukjent", "seksjon": "en av: sport, barn", "kategori": "hvis seksjon=sport: en av: Telt og sov, Sekker og pakking, Klær, Bukser og shorts, Sko og støvler, Ski og vinter, Sykkel, Klatring, Vannaktiviteter, Annet utstyr, Annet klær. Hvis seksjon=barn: en av: Klær 0-2 år, Klær 2-6 år, Klær 6-12 år, Klær 12-16 år, Leker og spill, Barnevogn og transport, Sykkel og sparkesykkel, Ski og vinterutstyr barn, Annet barn", "stand": "en av: Ny, Lite brukt, Brukt, Slitt", "pris": tall i norske kroner uten kr-tegn, "beskrivelse": "2-3 setninger som beskriver varen og egner seg som annonsetekst"}'
 
 export async function POST(request) {
   try {
