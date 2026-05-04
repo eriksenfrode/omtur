@@ -16,9 +16,15 @@ export default function AnnonseKlient() {
   const [sender, setSender] = useState(false)
   const [tidIgjen, setTidIgjen] = useState(null)
   const [aktivtBilde, setAktivtBilde] = useState(0)
+  const [lightboxApen, setLightboxApen] = useState(false)
+  const [hoverBilde, setHoverBilde] = useState(null)
+  const [innloggetEpost, setInnloggetEpost] = useState(null)
 
   useEffect(() => {
     hentAnnonse()
+    supabase.auth.getSession().then(({ data }) => {
+      setInnloggetEpost(data?.session?.user?.email ?? null)
+    })
   }, [])
 
   useEffect(() => {
@@ -158,24 +164,45 @@ export default function AnnonseKlient() {
         Tilbake til annonser
       </a>
 
+      {lightboxApen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+          onClick={() => setLightboxApen(false)}
+        >
+          <button
+            onClick={() => setLightboxApen(false)}
+            className="absolute top-4 right-4 text-white text-3xl leading-none w-10 h-10 flex items-center justify-center rounded-full bg-black bg-opacity-50 hover:bg-opacity-80"
+            aria-label="Lukk"
+          >
+            ×
+          </button>
+          <img
+            src={annonse.bilder[aktivtBilde]}
+            className="max-w-[92vw] max-h-[88vh] object-contain rounded-xl shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       {annonse.bilder && annonse.bilder.length > 0 && (
         <div className="mb-3">
           <div className="relative">
             <img
               src={annonse.bilder[aktivtBilde]}
               className="w-full object-cover rounded-xl"
-              style={{ maxHeight: '260px' }}
+              style={{ maxHeight: '260px', cursor: 'zoom-in' }}
+              onClick={() => setLightboxApen(true)}
             />
             {annonse.bilder.length > 1 && (
               <>
                 <button
-                  onClick={() => setAktivtBilde(i => (i - 1 + annonse.bilder.length) % annonse.bilder.length)}
+                  onClick={e => { e.stopPropagation(); setAktivtBilde(i => (i - 1 + annonse.bilder.length) % annonse.bilder.length) }}
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg"
                 >
                   ‹
                 </button>
                 <button
-                  onClick={() => setAktivtBilde(i => (i + 1) % annonse.bilder.length)}
+                  onClick={e => { e.stopPropagation(); setAktivtBilde(i => (i + 1) % annonse.bilder.length) }}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-40 hover:bg-opacity-60 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg"
                 >
                   ›
@@ -184,9 +211,26 @@ export default function AnnonseKlient() {
             )}
           </div>
           {annonse.bilder.length > 1 && (
-            <div className="flex gap-2 mt-2 overflow-x-auto">
+            <div className="relative flex gap-2 mt-2 overflow-x-auto">
+              {hoverBilde !== null && (
+                <div
+                  className="absolute bottom-[72px] left-0 z-10 pointer-events-none"
+                  style={{ left: Math.min(hoverBilde * 72, Math.max(0, annonse.bilder.length * 72 - 160)) + 'px' }}
+                >
+                  <img
+                    src={annonse.bilder[hoverBilde]}
+                    className="w-40 h-40 object-cover rounded-xl shadow-xl border-2 border-white"
+                  />
+                </div>
+              )}
               {annonse.bilder.map((src, i) => (
-                <button key={i} onClick={() => setAktivtBilde(i)} className="flex-shrink-0">
+                <button
+                  key={i}
+                  onClick={() => setAktivtBilde(i)}
+                  onMouseEnter={() => setHoverBilde(i)}
+                  onMouseLeave={() => setHoverBilde(null)}
+                  className="flex-shrink-0"
+                >
                   <img
                     src={src}
                     className={`h-[64px] w-[64px] object-cover rounded-lg transition-all ${
@@ -250,7 +294,17 @@ export default function AnnonseKlient() {
             </div>
           )}
 
-          {budrunde.status !== 'avsluttet' && (
+          {innloggetEpost && innloggetEpost === annonse.selger_epost ? (
+            <div className="mt-4 border-t border-gray-200 pt-4 space-y-3">
+              <p className="text-sm text-gray-500">Dette er din egen annonse — du kan ikke legge inn bud.</p>
+              <a
+                href={'/annonser/' + id + '/rediger'}
+                className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm font-medium"
+              >
+                Rediger annonse
+              </a>
+            </div>
+          ) : budrunde.status !== 'avsluttet' && (
             <div className="space-y-3 mt-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
