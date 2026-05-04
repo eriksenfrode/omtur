@@ -189,8 +189,8 @@ export default function AnnonseKlient() {
           <div className="relative">
             <img
               src={annonse.bilder[aktivtBilde]}
-              className="w-full object-cover rounded-xl"
-              style={{ maxHeight: '260px', cursor: 'zoom-in' }}
+              className="w-full rounded-xl"
+              style={{ width: '100%', height: '260px', objectFit: 'contain', backgroundColor: 'white', cursor: 'zoom-in' }}
               onClick={() => setLightboxApen(true)}
             />
             {annonse.bilder.length > 1 && (
