@@ -380,7 +380,7 @@ export default function AnnonseKlient() {
               <li className="flex items-start gap-2 text-sm text-gray-600"><span>📱</span><span><strong>Ta et bilde</strong> — Last opp bilde av utstyret</span></li>
               <li className="flex items-start gap-2 text-sm text-gray-600"><span>🤖</span><span><strong>KI gjør jobben</strong> — Annonsen skrives automatisk</span></li>
               <li className="flex items-start gap-2 text-sm text-gray-600"><span>🔨</span><span><strong>Budrunde starter</strong> — 24 timer, markedet bestemmer prisen</span></li>
-              <li className="flex items-start gap-2 text-sm text-gray-600"><span>💰</span><span><strong>Du får betalt</strong> — Selger kontakter deg når du vinner</span></li>
+              <li className="flex items-start gap-2 text-sm text-gray-600"><span>💰</span><span><strong>Du får betalt</strong> — Ta kontakt med kjøper for betaling og overlevering</span></li>
             </ul>
           </div>
           <div>
