@@ -252,7 +252,16 @@ export default function AnnonseKlient() {
         <p className="text-gray-400 text-sm mb-4">Sted: {annonse.postnummer}</p>
       )}
       {!annonse.postnummer && <div className="mb-4" />}
-      <p className="text-gray-600 mb-6">{annonse.beskrivelse}</p>
+      <p className="text-gray-600 mb-4">{annonse.beskrivelse}</p>
+
+      <a
+        href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/annonser/' + id)}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', backgroundColor: '#1877F2', color: 'white', padding: '12px', borderRadius: '10px', fontWeight: '500', fontSize: '15px', textDecoration: 'none', marginBottom: '24px'}}
+      >
+        <span style={{fontWeight: 'bold', fontSize: '18px'}}>f</span> Del på Facebook
+      </a>
 
       {budrunde && (
         <div className="bg-gray-50 rounded-xl p-5 mb-6">
@@ -358,14 +367,6 @@ export default function AnnonseKlient() {
               >
                 {sender ? 'Registrerer bud...' : 'Legg inn bud'}
               </button>
-              <a
-                href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://omtur.no/annonser/' + id)}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', backgroundColor: '#1877F2', color: 'white', padding: '12px', borderRadius: '10px', fontWeight: '500', fontSize: '15px', textDecoration: 'none', marginTop: '12px'}}
-              >
-                <span style={{fontWeight: 'bold', fontSize: '18px'}}>f</span> Del på Facebook
-              </a>
             </div>
           )}
         </div>

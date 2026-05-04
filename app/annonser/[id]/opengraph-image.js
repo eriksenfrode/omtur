@@ -37,12 +37,12 @@ export default async function Image({ params }) {
         }}
       >
         {bilde && (
-          <div style={{ width: '50%', height: '100%', display: 'flex', overflow: 'hidden' }}>
+          <div style={{ width: '50%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', overflow: 'hidden' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={bilde}
               alt=""
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
           </div>
         )}
