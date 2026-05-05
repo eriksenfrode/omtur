@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar'
 export default function Annonser() {
   const [annonser, setAnnonser] = useState([])
   const [laster, setLaster] = useState(true)
-  const [seksjon, setSeksjon] = useState('sport')
+  const [seksjon, setSeksjon] = useState('alle')
   const [filter, setFilter] = useState('Alle')
   const [visBoks, setVisBoks] = useState(false)
 
@@ -20,7 +20,7 @@ export default function Annonser() {
 
   const sportKategorier = ['Alle', 'Telt og sov', 'Sekker og pakking', 'Klær', 'Bukser og shorts', 'Sko og støvler', 'Ski og vinter', 'Sykkel', 'Klatring', 'Vannaktiviteter', 'Annet utstyr', 'Annet klær']
   const barnKategorier = ['Alle', 'Klær (0-2 år)', 'Klær (2-6 år)', 'Klær (6-12 år)', 'Klær (12-16 år)', 'Leker og spill', 'Barnevogn og transport', 'Sykkel og sparkesykkel', 'Ski og vinterutstyr barn', 'Annet barn']
-  const kategorier = seksjon === 'barn' ? barnKategorier : sportKategorier
+  const kategorier = seksjon === 'barn' ? barnKategorier : seksjon === 'sport' ? sportKategorier : []
 
   useEffect(() => {
     async function init() {
@@ -44,9 +44,11 @@ export default function Annonser() {
     setFilter('Alle')
   }
 
-  const seksjonFiltrert = seksjon === 'barn'
-    ? annonser.filter(a => a.seksjon === 'barn')
-    : annonser.filter(a => !a.seksjon || a.seksjon === 'sport')
+  const seksjonFiltrert = seksjon === 'alle'
+    ? annonser
+    : seksjon === 'barn'
+      ? annonser.filter(a => a.seksjon === 'barn')
+      : annonser.filter(a => !a.seksjon || a.seksjon === 'sport')
 
   const filtrerte = filter === 'Alle'
     ? seksjonFiltrert
@@ -76,7 +78,13 @@ export default function Annonser() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <button
+          onClick={() => byttSeksjon('alle')}
+          className={'px-4 py-2 rounded-full text-sm font-medium border ' + (seksjon === 'alle' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
+        >
+          Alle
+        </button>
         <button
           onClick={() => byttSeksjon('sport')}
           className={'px-4 py-2 rounded-full text-sm font-medium border ' + (seksjon === 'sport' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
@@ -91,17 +99,19 @@ export default function Annonser() {
         </button>
       </div>
 
-      <div className="flex gap-2 flex-wrap mb-6">
-        {kategorier.map(k => (
-          <button
-            key={k}
-            onClick={() => setFilter(k)}
-            className={'px-3 py-1 rounded-full text-sm border ' + (filter === k ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
-          >
-            {k}
-          </button>
-        ))}
-      </div>
+      {seksjon !== 'alle' && (
+        <div className="flex gap-2 flex-wrap mb-6">
+          {kategorier.map(k => (
+            <button
+              key={k}
+              onClick={() => setFilter(k)}
+              className={'px-3 py-1 rounded-full text-sm border ' + (filter === k ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-gray-600 border-gray-200 hover:border-emerald-400')}
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+      )}
 
       {laster ? (
         <p className="text-gray-400 text-center py-12">Laster annonser...</p>
