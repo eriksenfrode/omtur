@@ -1,3 +1,5 @@
+export const maxDuration = 60
+
 import Anthropic from '@anthropic-ai/sdk'
 
 const anthropic = new Anthropic({
@@ -11,7 +13,7 @@ export async function POST(request) {
     const { bilder } = await request.json()
 
     const innhold = [
-      ...bilder.map(b => ({
+      ...bilder.slice(0, 3).map(b => ({
         type: 'image',
         source: {
           type: 'base64',
