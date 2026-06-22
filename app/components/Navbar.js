@@ -35,6 +35,7 @@ export default function Navbar() {
         {/* Desktop-meny */}
         <div className="navbar-desktop" style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
           <a href="/annonser" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Annonser</a>
+          <a href="https://vedlikehold.omtur.no" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Bilvedlikehold</a>
           <a href="/om-oss" style={{fontSize: '14px', color: '#6b7280', textDecoration: 'none'}}>Om oss</a>
           {innlogget ? (
             <>
@@ -72,6 +73,7 @@ export default function Navbar() {
       {menyApen && (
         <div className="navbar-mobile-menu" style={{position: 'absolute', top: '64px', left: 0, right: 0, backgroundColor: 'white', borderTop: '1px solid #f3f4f6', borderBottom: '1px solid #f3f4f6', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.08)'}}>
           <a href="/annonser" onClick={() => setMenyApen(false)} style={{fontSize: '15px', color: '#374151', textDecoration: 'none', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>Annonser</a>
+          <a href="https://vedlikehold.omtur.no" onClick={() => setMenyApen(false)} style={{fontSize: '15px', color: '#374151', textDecoration: 'none', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>Bilvedlikehold</a>
           <a href="/om-oss" onClick={() => setMenyApen(false)} style={{fontSize: '15px', color: '#374151', textDecoration: 'none', padding: '8px 0', borderBottom: '1px solid #f3f4f6'}}>Om oss</a>
           {innlogget ? (
             <>
