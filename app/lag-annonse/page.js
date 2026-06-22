@@ -15,6 +15,7 @@ export default function LagAnnonse() {
   const [bilder, setBilder] = useState([])
   const [forhåndsvisninger, setForhåndsvisninger] = useState([])
   const [forsideBildeIndex, setForsideBildeIndex] = useState(0)
+  const [tilleggsinfo, setTilleggsinfo] = useState('')
   const [laster, setLaster] = useState(false)
   const [publiserer, setPubliserer] = useState(false)
   const [resultat, setResultat] = useState(null)
@@ -82,7 +83,7 @@ export default function LagAnnonse() {
     const svar = await fetch('/api/analyser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bilder: base64Bilder })
+      body: JSON.stringify({ bilder: base64Bilder, tilleggsinfo })
     })
     const data = await svar.json()
     setResultat({ ...data, minimumshopp: 50, postnummer: brukerPostnummer })
@@ -371,6 +372,19 @@ export default function LagAnnonse() {
       <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center', marginBottom: 16 }}>
         Last opp 3–5 bilder for best mulig prisestimat
       </p>
+
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ fontSize: 12, color: '#9ca3af', display: 'block', marginBottom: 4 }}>Ekstra info til KI (valgfri)</label>
+        <textarea
+          style={{ width: '100%', border: '1px solid #e5e7eb', borderRadius: 8, padding: '8px 12px', fontSize: 14, background: '#fff', boxSizing: 'border-box', resize: 'vertical' }}
+          rows={2}
+          maxLength={300}
+          value={tilleggsinfo}
+          onChange={e => setTilleggsinfo(e.target.value.slice(0, 300))}
+          placeholder="F.eks. størrelse, farge, materiale, eller annen info du vil at KI skal bruke når den skriver annonsen"
+        />
+        <p style={{ fontSize: 11, color: '#9ca3af', textAlign: 'right', marginTop: 2 }}>{tilleggsinfo.length}/300</p>
+      </div>
 
       {bilder.length > 0 && (
         <button

@@ -10,7 +10,11 @@ const PROMPT = 'Du er en ekspert på brukt klær og utstyr til sport, fritid, fr
 
 export async function POST(request) {
   try {
-    const { bilder } = await request.json()
+    const { bilder, tilleggsinfo } = await request.json()
+
+    const prompt = tilleggsinfo
+      ? `${PROMPT} Selger har lagt til denne tilleggsinformasjonen: ${tilleggsinfo}. Bruk denne informasjonen i analysen.`
+      : PROMPT
 
     const innhold = [
       ...bilder.slice(0, 3).map(b => ({
@@ -21,7 +25,7 @@ export async function POST(request) {
           data: b.data
         }
       })),
-      { type: 'text', text: PROMPT }
+      { type: 'text', text: prompt }
     ]
 
     const melding = await anthropic.messages.create({
