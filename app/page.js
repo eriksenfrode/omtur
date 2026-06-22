@@ -120,6 +120,20 @@ export default function Forside() {
         </div>
       </section>
 
+      {/* Vedlikehold.omtur.no reklame */}
+      <section style={{backgroundColor: 'white', paddingBottom: '80px'}}>
+        <div style={{maxWidth: '896px', margin: '0 auto', padding: '0 24px'}}>
+          <div style={{backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '32px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', textAlign: 'center'}}>
+            <div style={{fontSize: '28px', marginBottom: '12px'}}>🔧</div>
+            <h3 style={{fontSize: '18px', fontWeight: '500', marginBottom: '10px'}}>Slitsomt å innhente bilverksted-anbud?</h3>
+            <p style={{fontSize: '14px', color: '#4b5563', lineHeight: '1.6', maxWidth: '640px', margin: '0 auto 20px'}}>Du ringer ett verksted, venter på svar, ringer neste... Det tar tid du ikke har. Med vedlikehold.omtur.no sender du én forespørsel og får anbud fra flere lokale verksteder i Rana — så velger du selv.</p>
+            <a href="https://vedlikehold.omtur.no" style={{backgroundColor: '#2563eb', color: 'white', padding: '12px 32px', borderRadius: '12px', fontWeight: '500', fontSize: '14px', textDecoration: 'none', display: 'inline-block'}}>
+              Prøv gratis →
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Aktive annonser */}
       {annonser.length > 0 && (
         <section style={{backgroundColor: '#f9fafb', paddingTop: '80px', paddingBottom: '80px'}}>
